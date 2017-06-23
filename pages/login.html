@@ -1,0 +1,61 @@
+<div id="title-bar">
+
+    <div id="title-bar-btns">
+
+        <table width="100%">
+            <tr>
+                <td align="left" width="20%">
+                    <label style="margin: 5px 0px 0px 10px">WorkLog</label>
+                </td>
+                <td align="center" width="60%" ng-show="mErroLogin">
+                    <label style="margin: 5px 0px 0px 10px; color: white"> Verifique os dados informados </label>
+                </td>
+                <td align="right" width="20%">
+
+                    <button id="min-btn"> <i class="fa fa-minus" aria-hidden="true"></i> </button>
+                    <button id="close-btn"> <i class="fa fa-times" aria-hidden="true"></i> </button>
+
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+</div>
+
+<div class="login-box" style="margin-top: 15px; margin-bottom: 0px">
+
+  <table width="100%" align="center">
+    <tr>
+      <td width="100%" align="center">
+
+        <div class="login-box-body" style="width: 60%">
+
+          <form name="formLogin">
+
+            <div class="form-group has-feedback">
+              <input type="text" id="login" class="form-control" name="control.login" ng-model="control.login" placeholder="Login">
+              <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+              <input type="password" id="pass" class="form-control" name="control.password" ng-model="control.password"  placeholder="Password">
+              <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="row">
+              <div class="col-xs-4">
+                <button type="button" id="driver" class="btn btn-primary btn-block btn-flat" ng-click="login(control)">Sign In</button>
+              </div>
+              <div class="col-xs-8">
+                <button type="button" class="btn btn-primary btn-block btn-flat">I forgot my password</button>
+              </div>
+            </div>
+
+          </form> 
+
+        </div>  
+
+      </td>
+    </tr>
+  </table>
+
+</div>
