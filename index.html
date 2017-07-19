@@ -3,7 +3,7 @@
 <head>
   <meta charset="iso-8859-1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 2 | Starter</title>
+  <title>WorkLog | Jira</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="includes/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="includes/css/style.css">
@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="node_modules/admin-lte/plugins/jvectormap/jquery-jvectormap-1.2.2.css" />
   <link rel="stylesheet" href="node_modules/admin-lte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" />
   <link rel="stylesheet" href="node_modules/admin-lte/plugins/datatables/dataTables.bootstrap.css" />
+  <link rel="stylesheet" href="node_modules/sweetalert/dist/sweetalert.css"></script>
 
   <link rel="stylesheet" href="includes/css/font-awesome.min.css">
   <link rel="stylesheet" href="includes/css/ionicons.min.css">
@@ -36,7 +37,7 @@
 
   <div class="content-wrapper">
     <div class="container">
-      <div class="content-wrapper" id="main">
+      <div id="main">
 
         <div ng-view></div>
 
@@ -46,32 +47,6 @@
 
 </div>
 
-<script>
-  (function () {
-    
-    const remote = require('electron').remote;
-    
-    function init() {
-      document.getElementById("min-btn").addEventListener("click", function (e) {
-        const window = remote.getCurrentWindow();
-        window.minimize();
-      });
-              
-        document.getElementById("close-btn").addEventListener("click", function (e) {
-          const window = remote.getCurrentWindow();
-          window.close();
-        });
-      };
-      
-      document.onreadystatechange = function () {
-        if (document.readyState == "complete") {
-          init();
-        }
-      };
-            
-  })();
-</script>
-
 <script src="node_modules/angular/angular.js"></script>
 <script src="node_modules/angular-route/angular-route.js"></script>
 <script src="includes/js/app.js"></script>
@@ -79,6 +54,7 @@
 
 <script src="pages/js/login.js"></script>
 <script src="pages/js/home.js"></script>
+<script src="pages/js/config.js"></script>
 
 <script src="node_modules/jquery/dist/jquery.min.js"></script>
 <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
@@ -92,6 +68,8 @@
 <script src="includes/plugins/jquery.cookie.js"></script>
 <script src="includes/bootstrap/js/bootstrap.min.js"></script>
 <script src="includes/js/app.min.js"></script>
+
+<script src="node_modules/sweetalert/dist/sweetalert.min.js"></script>
 
 <script src="node_modules/admin-lte/plugins/bootstrap-slider/bootstrap-slider.js"></script>
 <script src="node_modules/admin-lte/plugins/morris/morris.min.js"></script>

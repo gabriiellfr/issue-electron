@@ -6,26 +6,32 @@ const url = require('url');
 
 let mainWindow;
 
-function createWindow () {
+const Menu = electron.Menu;
+app.on('ready', function () {
+   mainWindow = new BrowserWindow({
+      frame: true, width: 600, minWidth: 600, height: 600, minHeight: 600,
+      useContentSize : true, resizable: false,
+      fullscreenable : false
+    });
+    const menuTemplate = [
+    {
 
-  mainWindow = new BrowserWindow({
-    frame: false, width: 600, minWidth: 600, height: 235, minHeight: 235,
-    y : 100, x : 0, useContentSize : true,
-    fullscreenable : false
-  })
+    }
+    ];
+    const menu = Menu.buildFromTemplate(menuTemplate);
+    Menu.setApplicationMenu(menu);
 
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+    mainWindow.loadURL(url.format({
+      pathname: path.join(__dirname, 'index.html'),
+      protocol: 'file:',
+      slashes: true
+    }))
 
-  mainWindow.on('closed', function () {
-    mainWindow = null
-  })
-}
+    mainWindow.on('closed', function () {
+      mainWindow = null
+    })
 
-app.on('ready', createWindow)
+});
 
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {

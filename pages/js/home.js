@@ -2,12 +2,37 @@
 
 app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$window', function($scope, $http, $moment, $location, $window) {
 
+    $scope.verificaLogin = function () {
+
+      $http({
+        url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
+        method: "POST",
+        data:{}
+        }).then(function successCallback(response) {
+        }, function errorCallback(response) { 
+
+          swal({
+            title: "Sua sessão expirou!",
+            type: "warning",
+            showCancelButton: false,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ok",
+            closeOnConfirm: true
+          },
+          function(){
+            $scope.goTo("/");
+          });
+
+        });
+
+    }
+
     $scope.first = function (dataAtual, op) {
 
-      if($location.search().reload == true) {
-        $location.path('/home').search({ reload: false });
-        $window.location.reload();
-      }
+      $scope.verificaLogin();
+      $scope.getDadosUsuario();
+
+      $scope.loading = true;
 
       if(dataAtual == "") {
 
@@ -46,31 +71,47 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
       $scope.getInfoDia($scope.dataAtual);
 
     }
-
+	
     $scope.getChamados = function () {
 
       $http({
-        url: "http://foxbr.ddns.net/issue/pages/action/home.php",
+        url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
         method: "POST",
         data:{
     			op  : 1
   		    }
         }).then(function successCallback(response) {
+
+          console.log(response.data)
+
           $scope.chamados = response.data;
         }, function errorCallback(response) { });
+
+    }
+
+    $scope.detalhesIssue = function () {
+
+      if($scope.mDetalhes == true) {
+        $scope.mDetalhes = false;
+      } else {
+        $scope.mDetalhes = true;
+      }
 
     }
 
     $scope.salvar = function (controle) {
 
       $http({
-        url: "http://foxbr.ddns.net/issue/pages/action/home.php",
+        url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
         method: "POST",
         data:{
     			op  : $scope.op,
           dados : controle
   		    }
         }).then(function successCallback(response) {
+
+          console.log(response.data)
+
           $scope.first($scope.dataAtual, '');
         }, function errorCallback(response) { });
 
@@ -79,14 +120,18 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
     $scope.issue = function (id) {
 
       $http({
-        url: "http://foxbr.ddns.net/issue/pages/action/home.php",
+        url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
         method: "POST",
         data:{
     			op  : 3,
           id  : id
   		    }
         }).then(function successCallback(response) {
+
+          console.log(response.data)
+
           $scope.first($scope.dataAtual, '');
+          
         }, function errorCallback(response) { });
 
     }
@@ -94,7 +139,7 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
     $scope.getInfoDia = function (dataAtual) {
 
       $http({
-        url: "http://foxbr.ddns.net/issue/pages/action/home.php",
+        url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
         method: "POST",
         data:{
     			op  : 4,
@@ -102,16 +147,9 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
   		    }
         }).then(function successCallback(response) {
 
-          var aux = [];
+          $scope.infodia = response.data;
 
-          for(var i = 1; i <= response.data.length; i++) {
-            if(i == response.data.length) {
-              aux.push(response.data[i-1]);
-            }
-
-          }
-
-          $scope.infodia = aux;
+          $scope.loading = false;
 
         }, function errorCallback(response) { });
 
@@ -120,7 +158,7 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
     $scope.parado = function () {
 
       $http({
-        url: "http://foxbr.ddns.net/issue/pages/action/home.php",
+        url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
         method: "POST",
         data:{
     			op  : 5
@@ -154,11 +192,15 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
 
       angular.forEach($scope.chamados, function(todo) {
         if(todo.id == id) {
+          console.log(todo)
           $scope.controle = {
             issue : todo.numero,
             descricao : todo.descricao,
             info : todo.info,
-            id : todo.id
+            id : todo.id,
+
+            horasgastas : todo.horasgastas,
+            datai : todo.datai
           };
         }
       });
@@ -174,6 +216,50 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
           $scope.controleEM = todo;
         }
       });
+
+    }
+	
+    $scope.getDadosUsuario = function () {
+
+      $http({
+        url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
+        method: "POST",
+        data:{
+    			op  : 9
+  		    }
+        }).then(function successCallback(response) {
+
+          if(response.data.cod == 0) {
+            $location.path("config").search({ reload: true });
+          }
+
+          $scope.dadosUsuario = response.data;
+					  
+        }, function errorCallback(response) { });
+
+    }
+	
+    $scope.logout = function () {
+
+      $scope.loading = true;
+
+      $http({
+        url: "http://foxbr.ddns.net/issue-electron/includes/php/index.php",
+        method: "POST",
+        data:{
+    			op  : 2
+  		    }
+        }).then(function successCallback(response) {
+			
+			    $location.path('/').search({ reload: true });
+					  
+        }, function errorCallback(response) { });
+
+    }
+	
+    $scope.goTo = function (where) {
+
+      $location.path(where).search({ reload: true });
 
     }
 

@@ -5,15 +5,17 @@
     margin: 0px;  
 	color: #ADADAD;
 	font-family: sans-serif;
-
 }
 
 #title {
-	position: fixed;
 	top: 0px;
 	left: 12px;	
 	line-height: 32px;
 	font-size: 14px;
+}
+
+.content-header {
+	z-index: 2000;
 }
 
 #title-bar-btns {

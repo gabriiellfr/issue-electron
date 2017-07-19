@@ -11,6 +11,11 @@ var app = angular.module('myApp', ['ngRoute', 'angular-momentjs', 'ui.bootstrap'
         .when('/home', {
             templateUrl : 'pages/home.html',
             controller  : 'homeController'
+        })
+        
+        .when('/config', {
+            templateUrl : 'pages/config.html',
+            controller  : 'configController'
         });
 
 });

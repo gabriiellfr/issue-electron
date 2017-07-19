@@ -1,4 +1,4 @@
-<section class="content-header" style="margin: 0px 0px 0px 0px">
+<section class="content-header" style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px">
 
 <div id="title-bar">
 
@@ -6,17 +6,17 @@
 
         <table width="100%">
             <tr>
-                <td align="left" width="20%">
-                    <label style="margin: 5px 0px 0px 10px">WorkLog</label>
+                <td align="left" width="45%">
+                    <label style="color: white; margin: 5px 0px 0px 10px"> {{ dadosUsuario.nome }} </label>
                 </td>
-                <td align="center" width="60%">
-                    <label style="margin: 5px 0px 0px 10px">Administrador</label>
+                <td align="center" width="10%" title="Buscar">
+                    <input type="text" ng-model="search" placeholder="ABC-666" maxlength="7" style="background: transparent; color: white; text-align: center; width: 80px">
                 </td>
-                <td align="right" width="20%">
+                <td align="right" width="45%">
 
-                    <button id="max-btn"> <i class="fa fa-cogs" aria-hidden="true"></i> </button>
-                    <button id="min-btn"> <i class="fa fa-minus" aria-hidden="true"></i> </button>
-                    <button id="close-btn"> <i class="fa fa-times" aria-hidden="true"></i> </button>
+                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Expandir Issue" ng-click="detalhesIssue()"> <i class="fa fa-info-circle" aria-hidden="true"></i> </button>
+                    <button class="hidden" id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Configura&ccedil;&otilde;es" ng-click="goTo('config')"> <i class="fa fa-cogs" aria-hidden="true"></i> </button>
+                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" ng-click="logout()" title="Sair"> <i class="fa fa-sign-out" aria-hidden="true"></i> </button>
 
                 </td>
             </tr>
@@ -28,10 +28,10 @@
 
 </section>
 
-<section class="content" ng-init="first('','')" style="min-height: 0px">
+<section class="" ng-init="first('','')" style="margin: 0px 0px 0px 0px; padding: 5px">
 
-    <div class="row">
-        <div class="col-md-4 col-sm-4 col-xs-4" ng-repeat="chamado in chamados | filter:search | limitTo: 6" style="border-radius: 10px; text-align: center; padding: 1px">
+    <div class="row" ng-show="chamados.length > 0">
+        <div class="col-md-6 col-sm-6 col-xs-6" ng-repeat="chamado in chamados | filter:search | limitTo: 6" style="border-radius: 10px; text-align: center; padding: 1px">
 
             <div class="small-box" ng-class="{'1':'bg-green', '0':'bg-red', 'warning':'bg-yellow'}[chamado.rodando]" data-toggle="modal" data-target="#modalDetails" style="margin: 0px 0px 0px 0px">
 
@@ -42,11 +42,16 @@
                         </td>
                         <td>
                             <h3 style="font-size: 150%; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px">
-                            <a href="http://jira.kbase.inf.br/browse/{{ chamado.numero }}" target="_blank" style="color: white">{{ chamado.numero }}</a>
+                            {{ chamado.numero }}
                             </h3>
                         </td>
                         <td>
                             <i style="cursor: pointer;" ng-click="editarIssue(chamado.id)" class="fa fa-pencil-square-o" aria-hidden="true" data-toggle="modal" data-target="#modalADD"></i>
+                        </td>
+                    </tr>
+                    <tr ng-show="mDetalhes">
+                        <td colspan="3">
+                            {{ chamado.descricao }}
                         </td>
                     </tr>
                 </table>
@@ -56,20 +61,67 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" ng-show="chamados.length == 0">
+        <div class="col-md-12 col-sm-12 col-xs-12" style="border-radius: 10px; text-align: center; padding: 1px">
+
+            <div class="alert alert-danger" style="margin: 0px 0px 10px 0px">
+
+                Nenhuma issue encontrada.
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row" ng-hide="loading">
         <div class="col-md-12 col-sm-12 col-xs-12">
             <div class="box box-primary" style="margin: 0px 0px 0px 0px">
 
-                <table class="table" style="margin: 0px 0px 0px 0px">
-                    <tr ng-repeat="info in infodia | limitTo: 1">
-                        <td align="center"> <i data-toggle="modal" data-target="#modalEditarMarcacao" ng-click="editarMarcacao(info.id)" class="fa fa-pencil-square-o" aria-hidden="true"></i> </td>
-                        <td> {{ info.dia | date: 'dd/MM/yyyy' }} </td>
-                        <td> {{ info.issue }} </td>
-                        <td> {{ info.inicio }} </td>
-                        <td> {{ info.fim }} </td>
-                        <td> {{ info.duracao }} </td>
-                    </tr>
+          <table class="table">
+            <thead>
+              <th colspan="6" class="bg-light-blue">
+
+                <table width="100%" class="" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td width="15%">
+                      <button class="btn btn-primary form-control" ng-click="first(dataAtual,'1')"> << </button>
+                    </td>
+                    <td width="70%">
+                      <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle form-control" style="padding: 5px" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                          {{ auxDataAtual }}
+                          <span class="caret" ng-hide="mPeriodo"></span>
+                        </button>
+                        <ul style="margin: 0px 0px 0px 0px; padding: 0px" class="dropdown-menu centerDropdown" aria-labelledby="dropdownMenu1" ng-hide="mPeriodo">
+                          <li><button ng-click="addIssue()" data-toggle="modal" data-target="#modalADD" class="form-control btn btn-primary">Adicionar issue</button></li>
+                        </ul>
+                      </div>
+                    </td>
+                    <td width="15%">
+                      <button class="btn btn-primary form-control" ng-click="first(dataAtual,'2')"> >> </button>
+                    </td>
+                  </tr>
                 </table>
+
+              </th>
+            </thead>
+            <tr>
+              <td width="5%"></td>
+              <td>Dia</td>
+              <td>Issue</td>
+              <td>Inicio</td>
+              <td>Fim</td>
+              <td>Duracao</td>
+            </tr>
+            <tr ng-repeat="info in infodia">
+              <td align="center"> <i data-toggle="modal" data-target="#modalEditarMarcacao" ng-click="editarMarcacao(info.id)" class="fa fa-pencil-square-o" aria-hidden="true"></i> </td>
+              <td> {{ info.dia | date: 'dd/MM/yyyy' }} </td>
+              <td> {{ info.issue }} </td>
+              <td> {{ info.inicio }} </td>
+              <td> {{ info.fim }} </td>
+              <td> {{ info.duracao }} </td>
+            </tr>
+          </table>
 
             </div>
         </div>
@@ -77,28 +129,72 @@
 
 </section>
 
+<!-- tela de loading -->
+<section class="content" ng-show="loading">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 loading">
+            <table border="0" align="center" width="100%" height="100%">
+            <tr><td><br></td></tr>
+            <tr><td><br></td></tr>
+            <tr><td><br></td></tr>
+            <tr><td><br></td></tr>
+            <tr><td><br></td></tr>
+            <tr><td><br></td></tr>
+            <tr>
+                <td align="center">
+                    <img src="includes/img/loading.gif">
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <b>Aguarde...</b>
+                </td>
+            </tr>
+            </table>
+        </div>
+    </div>
+</section>
+
   <!-- Modal ADD -->
-<div class="modal fade" id="modalADD" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog modal-sm" role="document">
+<div class="modal fade" id="modalADD" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="margin-top: 20px">
+  <div class="modal-dialog modal-bg" role="document">
     <div class="modal-content">
       <div class="modal-body">
         <table class="table" style="margin: 0px 0px 0px 0px">
-          <tr>
+          <tr ng-show="modalEditar">
             <td>
-                Issue
-                <input type="text" ng-model="controle.issue" class="form-control">
+                Aberto em {{ controle.datai | date:'dd/MM/yyyy' }}
             </td>
-            <td>
+            <td align="right">
+                {{ controle.horasgastas }}
+            </td>
+          </tr>
+
+          <tr>
+            <td width="50%">
+                Issue
+                <input type="text" ng-model="controle.issue" class="form-control" ng-disabled="modalEditar">
+            </td>
+            <td width="50%">
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="2">
                 Descri&ccedil;&atilde;o
                 <input type="text" ng-model="controle.descricao" class="form-control">
             </td>
           </tr>
+
           <tr>
-            <td>
+            <td colspan="2">
                 Info
                 <input type="text" ng-model="controle.info" class="form-control">
             </td>
-            <td><br>
+          </tr>
+
+          <tr>
+            <td align="right" colspan="2"><br>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                 <button type="button" ng-click="salvar(controle, 2)" class="btn btn-primary" data-dismiss="modal">Salvar</button>
             </td>
@@ -111,12 +207,18 @@
 
 <!-- Modal Editar marcacao -->
 <div class="modal fade" id="modalEditarMarcacao" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-<div class="modal-dialog modal-sm" role="document">
+<div class="modal-dialog modal-bg" role="document">
   <div class="modal-content">
 
     <div class="modal-body">
 
         <table class="table" style="margin: 0px 0px 0px 0px">
+            <tr>
+                <td colspan="3">
+                    Detalhes
+                    <input type="text" ng-model="controleEM.info" class="form-control">
+                </td>
+            </tr>
             <tr>
                 <td>
                     Inicio 
@@ -138,7 +240,7 @@
                 </td>
                 <td>
                     Dia 
-                    <input type="text" ng-model="controleEM.dia" class="form-control">
+                    <input type="text" ng-model="controleEM.dia" class="form-control" ng-disabled="true">
                 </td>
                 <td>
                     <br>
