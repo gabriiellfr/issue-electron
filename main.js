@@ -10,7 +10,7 @@ const Menu = electron.Menu;
 app.on('ready', function () {
    mainWindow = new BrowserWindow({
       frame: true, width: 600, minWidth: 600, height: 600, minHeight: 600,
-      useContentSize : true, resizable: false,
+      useContentSize : true, resizable: false, autoHideMenuBar: true,
       fullscreenable : false
     });
     const menuTemplate = [
@@ -30,6 +30,8 @@ app.on('ready', function () {
     mainWindow.on('closed', function () {
       mainWindow = null
     })
+
+    //mainWindow.webContents.openDevTools();
 
 });
 

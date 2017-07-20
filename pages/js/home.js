@@ -85,6 +85,7 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
           console.log(response.data)
 
           $scope.chamados = response.data;
+
         }, function errorCallback(response) { });
 
     }
@@ -198,7 +199,7 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
             descricao : todo.descricao,
             info : todo.info,
             id : todo.id,
-
+            atividade : todo.atividade,
             horasgastas : todo.horasgastas,
             datai : todo.datai
           };
@@ -234,6 +235,11 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
           }
 
           $scope.dadosUsuario = response.data;
+
+          if(response.data.msg == 0) {
+            var aux = response.data.nome.split(" ");
+            swal("Satisfação aspira "+aux[0]+"", "Envie sua sugestão de melhoria clicando no ícone do GitHub.");
+          }
 					  
         }, function errorCallback(response) { });
 

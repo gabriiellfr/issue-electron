@@ -4,8 +4,6 @@ app.controller('indexController', ['$scope', '$http', '$moment', '$location', fu
 
   $scope.loading = false;
 
-  console.log($location.hostname)
-
   $scope.mNome    = false;
   $scope.mLogin   = false;
   $scope.mSenha   = false;
@@ -35,7 +33,6 @@ app.controller('indexController', ['$scope', '$http', '$moment', '$location', fu
           $scope.mErroLogin = true;
 
         } else {
-          console.log(response.data);
           $location.path('/home/').search({ reload: true });
         }
 
@@ -75,8 +72,6 @@ app.controller('indexController', ['$scope', '$http', '$moment', '$location', fu
             }
           }).then(function successCallback(response) {
 
-            console.log(response.data)
-
             if(response.data == 0) {
                $scope.mContaCriada = true;
                $scope.mErroCriarConta = false;
@@ -94,3 +89,24 @@ app.controller('indexController', ['$scope', '$http', '$moment', '$location', fu
   }
 
 }]);
+
+
+// Common directive for Focus
+app.directive('focus',
+	function($timeout) {
+		return {
+			scope : {
+				trigger : '@focus'
+			},
+			link : function(scope, element) {
+				scope.$watch('trigger', function(value) {
+					if (value === "true") {
+						$timeout(function() {
+							element[0].focus();
+						});
+					}
+				});
+			}
+		};
+	}
+); 
