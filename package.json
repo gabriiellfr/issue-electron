@@ -39,6 +39,8 @@
     "sweetalert": "latest",
     "ui-select": "^0.17.0",
     "websql": "^0.4.4",
-    "electron-updater": "latest"
+    "electron-updater": "latest",
+    "electron-is-dev": "^0.1.1",
+    "electron-config": "0.2.1"
   }
 }

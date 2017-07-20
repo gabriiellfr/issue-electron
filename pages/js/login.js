@@ -11,6 +11,39 @@ app.controller('indexController', ['$scope', '$http', '$moment', '$location', fu
   $scope.mEmail   = false;
   $scope.mContaCriada = false;
 
+  $scope.ultimoLogin = function () {
+
+    const os = require('os');
+    $scope.hostname = os.hostname();
+
+    $scope.loading = true;
+
+    $http({
+      url: "http://foxbr.ddns.net/issue-electron/includes/php/index.php",
+      method: "POST",
+      data:{
+        op  : 4,
+        hostname : $scope.hostname
+        }
+      }).then(function successCallback(response) {
+
+        if(response.data != "false") {
+          $scope.control = {
+            login : response.data.usuario,
+            password : response.data.senha
+          }
+
+          $scope.ultimoLogin = true;
+        } else {
+          $scope.ultimoLogin = false;
+        }
+
+        $scope.loading = false;
+
+      }, function errorCallback(response) {  });
+
+  }
+
   $scope.login = function (controle) {
 
     $scope.loading = true;
@@ -22,7 +55,9 @@ app.controller('indexController', ['$scope', '$http', '$moment', '$location', fu
       method: "POST",
       data:{
         op  : 1,
-        controle : controle
+        controle : controle,
+        hostname : $scope.hostname,
+        ultimoLogin : $scope.ultimoLogin
         }
       }).then(function successCallback(response) {
 

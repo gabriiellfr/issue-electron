@@ -82,8 +82,6 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
   		    }
         }).then(function successCallback(response) {
 
-          console.log(response.data)
-
           $scope.chamados = response.data;
 
         }, function errorCallback(response) { });
@@ -111,8 +109,6 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
   		    }
         }).then(function successCallback(response) {
 
-          console.log(response.data)
-
           $scope.first($scope.dataAtual, '');
         }, function errorCallback(response) { });
 
@@ -128,8 +124,6 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
           id  : id
   		    }
         }).then(function successCallback(response) {
-
-          console.log(response.data)
 
           $scope.first($scope.dataAtual, '');
           
@@ -193,7 +187,7 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
 
       angular.forEach($scope.chamados, function(todo) {
         if(todo.id == id) {
-          console.log(todo)
+
           $scope.controle = {
             issue : todo.numero,
             descricao : todo.descricao,
