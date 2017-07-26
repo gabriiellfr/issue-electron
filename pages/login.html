@@ -1,4 +1,4 @@
-<section class="content-header" style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px" ng-init="ultimoLogin()">
+<section class="content-header" style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px" ng-init="verificaUpdate()">
 
 <div id="title-bar">
 
@@ -29,7 +29,7 @@
 		<tr>
 		  <td width="100%" align="center">
 			
-			<div class="login-box-body" style="width: 60%">
+			<div class="login-box-body" style="width: 30%">
 
 			  <form name="formLogin" ng-keyup="$event.keyCode == 13 ? login(control) : null">
 
@@ -38,7 +38,7 @@
 				  <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
 				</div>
 				<div class="form-group has-feedback">
-				  <input type="password" id="pass" class="form-control" name="control.password" ng-model="control.password"  placeholder="Password">
+				  <input type="password" id="pass" class="form-control" name="control.password" ng-model="control.password" placeholder="Password">
 				  <span class="glyphicon glyphicon-lock form-control-feedback"></span>
 				</div>
 				<div class="row">
@@ -58,75 +58,6 @@
 		</tr>
 	</table>
 
-</div>
-
-<!-- Modal Editar marcacao -->
-<div class="modal fade" id="modalEditarMarcacao" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="margin-top: 20px">
-<div class="modal-dialog modal-bg" role="document">
-  <div class="modal-content">
-
-    <div class="modal-body">
-
-		<form name="formAdd">
-
-			<table class="table" style="margin: 0px 0px 0px 0px">
-				<tr>
-					<td colspan="3">
-						Nome
-						<input type="text" ng-model="controleEM.nome" class="form-control" required>
-						<label ng-show="mNome" style="color: red"> Campo obrigatorio </label>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Login 
-						<input type="text" ng-model="controleEM.login" class="form-control" required>
-						<label ng-show="mLogin" style="color: red"> Campo obrigatorio </label>
-					</td>
-					<td>
-						Senha 
-						<input type="password" ng-model="controleEM.senha" class="form-control" required>
-						<label ng-show="mSenha" style="color: red"> Campo obrigatorio </label>
-						<label ng-show="mSenha2" style="color: red"> As senhas nao coincidem </label>
-					</td>
-					<td>
-						Digite a senha novamente 
-						<input type="password" ng-model="controleEM.senhaN" class="form-control" required>
-						<label ng-show="mSenhaN" style="color: red"> Campo obrigatorio </label>
-						<label ng-show="mSenha2" style="color: red"> As senhas nao coincidem </label>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2">
-						Email 
-						<input type="text" ng-model="controleEM.email" class="form-control" required>
-						<label ng-show="mEmail" style="color: red"> Campo obrigatorio </label>
-					</td>
-					<td>
-						<br>
-						<button type="button" ng-click="salvar(controleEM, formAdd.$valid)" class="btn btn-primary">Criar conta</button>
-					</td>
-				</tr>
-
-				<tr ng-show="mContaCriada || mErroCriarConta">
-					<td colspan="3" ng-show="mContaCriada">
-						<div class="alert alert-success" style="margin: 0px 0px 0px 0px; text-align: center">
-							Conta criado com sucesso.
-						</div>
-					</td>
-					<td colspan="3" ng-show="mErroCriarConta">
-						<div class="alert alert-danger" style="margin: 0px 0px 0px 0px; text-align: center">
-							J&aacute; existe um cadastro usando estes login ou senha.
-						</div>
-					</td>
-				</tr>
-			</table>
-
-		</form>
-
-    </div>
-  </div>
-</div>
 </div>
 
 <!-- tela de loading -->

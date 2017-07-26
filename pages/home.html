@@ -1,4 +1,4 @@
-<section class="content-header" style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px">
+<section class="content-header" style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px" ng-init="getIssues('OKI-30', teste)">
 
 <div id="title-bar">
 
@@ -8,19 +8,22 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
 
                 <div class="col-md-4 col-sm-4 col-xs-4" style="border-radius: 10px; text-align: left; padding: 1px">
-                    <label style="color: white; margin: 5px 0px 0px 10px"> {{ dadosUsuario.nome }} </label>
+                    <label style="color: white; margin: 5px 0px 0px 10px"> {{ dadosUsuario.displayName }} </label>
                 </div>
 
                 <div class="col-md-4 col-sm-4 col-xs-4" style="border-radius: 10px; text-align: center; padding: 1px">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                    <input type="text" ng-model="search" placeholder="ABC-666" maxlength="7" style="background: transparent; color: white; text-align: center; width: 80px">
+                    <form ng-keyup="$event.keyCode == 13 ? getIssuesJira(search) : null">
+                        <input type="text" ng-model="search" placeholder="ABC-666" maxlength="9" style="background: transparent; color: white; text-align: center; width: 80px">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </form>
                 </div>
 
                 <div class="col-md-4 col-sm-4 col-xs-4" style="border-radius: 10px; text-align: right; padding: 1px">
+                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Carregar Issues do JIRA" ng-click="getIssuesJira()"> <i class="fa fa-refresh" aria-hidden="true"></i> </button>
                     <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Expandir Issue" ng-click="detalhesIssue()"> <i class="fa fa-info-circle" aria-hidden="true"></i> </button>
-                    <a href="https://github.com/gabriiellfr/issue-electron/issues" target="_new"><button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="GitHub"> <i class="fa fa-github" aria-hidden="true"></i> </button></a>
-                    <button class="hidden" id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Configura&ccedil;&otilde;es" ng-click="goTo('config')"> <i class="fa fa-cogs" aria-hidden="true"></i> </button>
-                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" ng-click="logout()" title="Sair"> <i class="fa fa-sign-out" aria-hidden="true"></i> </button>
+                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="GitHub" ng-click="novaJanela('https://github.com/gabriiellfr/issue-electron/issues')"> <i class="fa fa-github" aria-hidden="true"></i> </button>
+                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Configura&ccedil;&otilde;es" ng-click="goTo('config')" class="hidden"> <i class="fa fa-cogs" aria-hidden="true"></i> </button>
+                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Sair" ng-click="logout()"> <i class="fa fa-sign-out" aria-hidden="true"></i> </button>
                 </div>
 
             </div>
@@ -32,7 +35,7 @@
 
 </section>
 
-<section class="" ng-init="first('','')" style="margin: 0px 0px 0px 0px; padding: 5px">
+<section class="" style="margin: 0px 0px 0px 0px; padding: 5px">
 
     <div class="row" ng-show="chamados.length > 0">
         <div class="col-md-6 col-sm-6 col-xs-6" ng-repeat="chamado in chamados | filter:search | limitTo: 6" style="border-radius: 10px; text-align: center; padding: 1px">
@@ -42,7 +45,7 @@
                 <table class="table table-borderless" style="margin: 0px 0px 10px 0px">
                     <tr>
                         <td>
-                            <i style="cursor: pointer;" ng-click="issue(chamado.id)" ng-class="{'0':'fa fa-play', '1':'fa fa-hand-paper-o'}[chamado.rodando]" aria-hidden="true"></i>
+                            <i style="cursor: pointer;" ng-click="controleIssue(chamado.id)" ng-class="{'0':'fa fa-play', '1':'fa fa-hand-paper-o'}[chamado.rodando]" aria-hidden="true"></i>
                         </td>
                         <td>
                             <h3 style="font-size: 150%; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px">
@@ -92,13 +95,9 @@
                     </td>
                     <td width="70%">
                       <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle form-control" style="padding: 5px" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <button class="btn btn-primary form-control" style="padding: 5px" type="button" aria-haspopup="true" aria-expanded="true">
                           {{ auxDataAtual }}
-                          <span class="caret" ng-hide="mPeriodo"></span>
                         </button>
-                        <ul style="margin: 0px 0px 0px 0px; padding: 0px" class="dropdown-menu centerDropdown" aria-labelledby="dropdownMenu1" ng-hide="mPeriodo">
-                          <li><button ng-click="addIssue()" data-toggle="modal" data-target="#modalADD" class="form-control btn btn-primary">Adicionar issue</button></li>
-                        </ul>
                       </div>
                     </td>
                     <td width="15%">
@@ -124,6 +123,9 @@
               <td> {{ info.inicio }} </td>
               <td> {{ info.fim }} </td>
               <td> {{ info.duracao }} </td>
+            </tr>
+            <tr ng-show="infodia.length == 0" class="alert">
+              <td colspan="6" alingn="center" style="text-align: center">Nenhum registro encontrado.</td>
             </tr>
           </table>
 

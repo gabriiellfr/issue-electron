@@ -5,35 +5,38 @@ const path = require('path');
 const url = require('url');
 
 let mainWindow;
-
 const Menu = electron.Menu;
-app.on('ready', function () {
-   mainWindow = new BrowserWindow({
-      frame: true, width: 600, minWidth: 600, height: 600, minHeight: 600,
+
+function createWindow () {
+
+  mainWindow = new BrowserWindow({
+      frame: true, width: 1000, minWidth: 1000, height: 600, minHeight: 600,
       useContentSize : true, resizable: false, autoHideMenuBar: true,
       fullscreenable : false
-    });
-    const menuTemplate = [
-    {
+  })
 
-    }
-    ];
-    const menu = Menu.buildFromTemplate(menuTemplate);
-    Menu.setApplicationMenu(menu);
+  const menuTemplate = [
+  {
 
-    mainWindow.loadURL(url.format({
-      pathname: path.join(__dirname, 'index.html'),
-      protocol: 'file:',
-      slashes: true
-    }))
+  }
+  ];
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menu);
 
-    mainWindow.on('closed', function () {
-      mainWindow = null
-    })
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, 'index.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
 
-    //mainWindow.webContents.openDevTools();
+  mainWindow.on('closed', function () {
+    mainWindow = null
+  })
 
-});
+  mainWindow.webContents.openDevTools();
+}
+
+app.on('ready', createWindow)
 
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') {
