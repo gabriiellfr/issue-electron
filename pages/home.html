@@ -1,4 +1,4 @@
-<section class="content-header" style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px" ng-init="getIssues('OKI-30', teste)">
+<section class="content-header" style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px" ng-init="getUserData()">
 
 <div id="title-bar">
 
@@ -20,8 +20,8 @@
 
                 <div class="col-md-4 col-sm-4 col-xs-4" style="border-radius: 10px; text-align: right; padding: 1px">
                     <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Carregar Issues do JIRA" ng-click="getIssuesJira()"> <i class="fa fa-refresh" aria-hidden="true"></i> </button>
-                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Expandir Issue" ng-click="detalhesIssue()"> <i class="fa fa-info-circle" aria-hidden="true"></i> </button>
-                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="GitHub" ng-click="novaJanela('https://github.com/gabriiellfr/issue-electron/issues')"> <i class="fa fa-github" aria-hidden="true"></i> </button>
+                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Expandir Issue" ng-click="issueDetails()"> <i class="fa fa-info-circle" aria-hidden="true"></i> </button>
+                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="GitHub" ng-click="newWindow('https://github.com/gabriiellfr/issue-electron/issues')"> <i class="fa fa-github" aria-hidden="true"></i> </button>
                     <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Configura&ccedil;&otilde;es" ng-click="goTo('config')" class="hidden"> <i class="fa fa-cogs" aria-hidden="true"></i> </button>
                     <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Sair" ng-click="logout()"> <i class="fa fa-sign-out" aria-hidden="true"></i> </button>
                 </div>
@@ -45,7 +45,7 @@
                 <table class="table table-borderless" style="margin: 0px 0px 10px 0px">
                     <tr>
                         <td>
-                            <i style="cursor: pointer;" ng-click="controleIssue(chamado.id)" ng-class="{'0':'fa fa-play', '1':'fa fa-hand-paper-o'}[chamado.rodando]" aria-hidden="true"></i>
+                            <i style="cursor: pointer;" ng-click="issueControl(chamado.id)" ng-class="{'0':'fa fa-play', '1':'fa fa-hand-paper-o'}[chamado.rodando]" aria-hidden="true"></i>
                         </td>
                         <td>
                             <h3 style="font-size: 150%; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px">
@@ -53,7 +53,7 @@
                             </h3>
                         </td>
                         <td>
-                            <i style="cursor: pointer;" ng-click="editarIssue(chamado.id)" class="fa fa-pencil-square-o" aria-hidden="true" data-toggle="modal" data-target="#modalADD"></i>
+                            <i style="cursor: pointer;" ng-click="editIssue(chamado.id)" class="fa fa-pencil-square-o" aria-hidden="true" data-toggle="modal" data-target="#modalADD"></i>
                         </td>
                     </tr>
                     <tr ng-show="mDetalhes">
@@ -91,7 +91,7 @@
                 <table width="100%" class="" cellpadding="0" cellspacing="0">
                   <tr>
                     <td width="15%">
-                      <button class="btn btn-primary form-control" ng-click="first(dataAtual,'1')"> << </button>
+                      <button class="btn btn-primary form-control" ng-click="init(dataAtual,'1')"> << </button>
                     </td>
                     <td width="70%">
                       <div class="dropdown">
@@ -101,7 +101,7 @@
                       </div>
                     </td>
                     <td width="15%">
-                      <button class="btn btn-primary form-control" ng-click="first(dataAtual,'2')"> >> </button>
+                      <button class="btn btn-primary form-control" ng-click="init(dataAtual,'2')"> >> </button>
                     </td>
                   </tr>
                 </table>
@@ -117,7 +117,7 @@
               <td>Duracao</td>
             </tr>
             <tr ng-repeat="info in infodia">
-              <td align="center"> <i  style="cursor: pointer;" data-toggle="modal" data-target="#modalEditarMarcacao" ng-click="editarMarcacao(info.id)" class="fa fa-pencil-square-o" aria-hidden="true"></i> </td>
+              <td align="center"> <i  style="cursor: pointer;" data-toggle="modal" data-target="#modalEditarMarcacao" ng-click="editWorklog(info.id)" class="fa fa-pencil-square-o" aria-hidden="true"></i> </td>
               <td> {{ info.dia | date: 'dd/MM/yyyy' }} </td>
               <td> {{ info.issue }} </td>
               <td> {{ info.inicio }} </td>
@@ -219,7 +219,7 @@
           <tr>
             <td align="right" colspan="2"><br>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                <button type="button" ng-click="salvar(controle, 2)" class="btn btn-primary" data-dismiss="modal">Salvar</button>
+                <button type="button" ng-click="save(controle, 2)" class="btn btn-primary" data-dismiss="modal">Salvar</button>
             </td>
           </tr>
         </table>
@@ -267,8 +267,8 @@
                 </td>
                 <td>
                     <br>
-                    <button type="button" ng-click="excluir(controleEM)" class="btn btn-default" data-dismiss="modal">Excluir</button>
-                    <button type="button" ng-click="salvar(controleEM)" class="btn btn-primary" data-dismiss="modal">Salvar</button>
+                    <button type="button" ng-click="delete(controleEM)" class="btn btn-default" data-dismiss="modal">Excluir</button>
+                    <button type="button" ng-click="save(controleEM)" class="btn btn-primary" data-dismiss="modal">Salvar</button>
                 </td>
             </tr>
         </table>

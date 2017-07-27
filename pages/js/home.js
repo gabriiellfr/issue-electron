@@ -1,8 +1,8 @@
 'use strict';
 
-app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$window', function($scope, $http, $moment, $location, $window) {
+app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$window', 'http', function($scope, $http, $moment, $location, $window, http) {
 
-  $scope.first = function (dataAtual, op) {
+  $scope.init = function (dataAtual, op) {
 
     $scope.mDetalhes = false;
 
@@ -42,50 +42,54 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
     $scope.auxDataAtual = $scope.diaAtual + "/" + $scope.mesAtual + "/" + $scope.anoAtual;
 
     $scope.getIssuesBD();
-    $scope.getInfoDia($scope.dataAtual);
+    $scope.getInfoDay($scope.dataAtual);
 
   }
 
-  $scope.getDadosUsuario = function () {
+  $scope.getUserData = function () {
 
     $scope.loading = true;
 
-    $http({
-      url: "http://jira.kbase.inf.br/rest/auth/1/session",
-      method: "GET",
-      data:{
+    var params = {
+        url: "http://jira.kbase.inf.br/rest/auth/1/session",
+        method: "GET",
+        data: {
         }
-      }).then(function successCallback(response) {
+    };
 
-        $http({
-          url: response.data.self,
-          method: "GET",
-          data:{
-            }
-          }).then(function successCallback(response) {
+    http.getData(params).then(function(response) {
 
-            $scope.dadosUsuario = response.data;
-            $scope.getIssuesJira();
-              
-          }, function errorCallback(response) { });
+      params = {
+        url: response.self,
+        method: "GET",
+        data: {
+        }
+      };
+         
+      http.getData(params).then(function(responseB) {
           
-      }, function errorCallback(response) { });
+          $scope.dadosUsuario = responseB;
+          $scope.getIssuesJira();
+
+      });
+
+    });
 
   }
 
-  $scope.getIssuesJira = function (busca) {
+  $scope.getIssuesJira = function (search) {
 
     var JQL;
 
-    if(!busca) {
+    if(!search)
       JQL = "status NOT IN ('closed', 'Resolved', 'Cancelled') AND assignee='"+$scope.dadosUsuario.name+"'";
-    } else {
-      JQL = "issue = '" + busca + "'";
-    }
+
+    else
+      JQL = "issue = '" + search + "'";
 
     $scope.loading = true;
 
-    $http({
+    var params = {
       url: "http://jira.kbase.inf.br/rest/api/2/search",
       method: "POST",
       data:{
@@ -97,17 +101,19 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
               "assignee"
           ]
       }
-      }).then(function successCallback(response) {
+    };
 
-        $scope.saveIssuesBD(response.data.issues);
+    http.getData(params).then(function(response) {
 
-      }, function errorCallback(response) { });
+      $scope.saveIssuesBD(response.issues);
+
+    });
 
   }
 
   $scope.saveIssuesBD = function (issues) {
 
-    $http({
+    var params = {
       url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
       method: "POST",
       data:{
@@ -115,36 +121,38 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
         issues : issues,
         usuario : $scope.dadosUsuario.name
       }
-      }).then(function successCallback(response) {
+    };
 
-        $scope.first('', '');
+    http.getData(params).then(function(response) {
 
-      }, function errorCallback(response) { });
+      $scope.init('', '');
+
+    });
 
   }
 
   $scope.getIssuesBD = function () {
 
-    $http({
+    var params = {
       url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
       method: "POST",
       data:{
         op : 2,
         usuario : $scope.dadosUsuario.name
       }
-      }).then(function successCallback(response) {
+    };
 
-        $scope.chamados = response.data;
+    http.getData(params).then(function(response) {
 
-      }, function errorCallback(response) { });
+      $scope.chamados = response;
+
+    });
 
   }
 
-  $scope.getInfoDia = function (data) {
+  $scope.getInfoDay = function (data) {
 
-    $scope.publicarJira();
-
-    $http({
+    var params = {
       url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
       method: "POST",
       data:{
@@ -152,16 +160,18 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
         data : data,
         usuario : $scope.dadosUsuario.name
       }
-      }).then(function successCallback(response) {
+    };
 
-        $scope.infodia = response.data;
+    http.getData(params).then(function(response) {
+
+        $scope.infodia = response;
         $scope.loading = false;
 
-      }, function errorCallback(response) { });
+    });
 
   }
 
-  $scope.publicarJira = function () {
+  $scope.publishJira = function () {
 
     $http({
       url: "http://jira.kbase.inf.br/rest/api/2/issue/OKI-320/worklog",
@@ -173,31 +183,32 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
       }
       }).then(function successCallback(response) {
 
-        console.log(response.data);
 
       }, function errorCallback(response) { });
 
   }
 
-  $scope.controleIssue = function (id) {
+  $scope.issueControl = function (id) {
 
-    $http({
+    var params = {
       url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
       method: "POST",
       data:{
         op  : 4,
         id  : id,
         usuario : $scope.dadosUsuario.name
-        }
-      }).then(function successCallback(response) {
+      }
+    };
 
-        $scope.first('', '');
-        
-      }, function errorCallback(response) { });
+    http.getData(params).then(function(response) {
+
+      $scope.init('', '');
+
+    });
 
   }
 
-  $scope.editarIssue = function (id) {
+  $scope.editIssue = function (id) {
 
     $scope.modalEditar = true;
     $scope.op = 8;
@@ -220,7 +231,7 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
 
   }
 
-  $scope.editarMarcacao = function (id) {
+  $scope.editWorklog = function (id) {
 
     $scope.op = 6;
 
@@ -232,50 +243,50 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
 
   }
 
-  $scope.salvar = function (controle) {
+  $scope.save = function (controle) {
 
-    $http({
+    var params = {
       url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
       method: "POST",
       data:{
         op  : $scope.op,
         dados : controle,
         usuario : $scope.dadosUsuario.name
-        }
-      }).then(function successCallback(response) {
+      }
+    };
 
-        console.log(response.data)
+    http.getData(params).then(function(response) {
 
-        $scope.first($scope.dataAtual, '');
+      $scope.init($scope.dataAtual, '');
 
-      }, function errorCallback(response) { });
+    });
 
   }
 
-  $scope.excluir = function (controle) {
+  $scope.delete = function (controle) {
 
     $scope.op = 100;
-    $scope.salvar(controle);
+    $scope.save(controle);
 
   }
 
   $scope.logout = function () {
 
-    $http({
+    var params = {
       url: "http://jira.kbase.inf.br/rest/auth/1/session",
       method: "DELETE",
       headers: {
         'Content-type': 'application/json;charset=utf-8'
       }
-      }).then(function successCallback(response) {
-      }, function errorCallback(response) { });
+    };
 
+    http.getData(params);
     $scope.loading = true;
     $location.path('/').search({ reload: true });
 
   }
 
-  $scope.detalhesIssue = function () {
+  $scope.issueDetails = function () {
 
     if($scope.mDetalhes == true) {
       $scope.mDetalhes = false;
@@ -285,7 +296,7 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
 
   }
 
-  $scope.novaJanela = function (url) {
+  $scope.newWindow = function (url) {
 
     const remote = require('electron').remote;
     const BrowserWindow = remote.BrowserWindow;

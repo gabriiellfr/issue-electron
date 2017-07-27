@@ -21,7 +21,7 @@ app.controller('indexController', ['$scope', '$http', '$moment', '$location', fu
         if(response.data) {
 
           swal({
-            title: "Existe uma nova vers„o disponÌvel",
+            title: "Existe uma nova vers√£o dispon√≠vel",
             text: "Pressione Ok e aguarde o processo terminar.",
             type: "warning",
             showCancelButton: false,
