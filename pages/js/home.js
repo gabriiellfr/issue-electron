@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$window', 'http', function($scope, $http, $moment, $location, $window, http) {
+app.controller('homeController', ['$scope', '$moment', '$location', 'http', function($scope, $moment, $location, http) {
 
   $scope.init = function (dataAtual, op) {
 
@@ -46,7 +46,7 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
 
   }
 
-  $scope.getUserData = function () {
+  $scope.getUser = function () {
 
     $scope.loading = true;
 
@@ -87,8 +87,6 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
     else
       JQL = "issue = '" + search + "'";
 
-    $scope.loading = true;
-
     var params = {
       url: "http://jira.kbase.inf.br/rest/api/2/search",
       method: "POST",
@@ -105,7 +103,8 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
 
     http.getData(params).then(function(response) {
 
-      $scope.saveIssuesBD(response.issues);
+      if(response)
+        $scope.saveIssuesBD(response.issues);
 
     });
 
@@ -171,37 +170,72 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
 
   }
 
-  $scope.publishJira = function () {
-
-    $http({
-      url: "http://jira.kbase.inf.br/rest/api/2/issue/OKI-320/worklog",
-      method: "POST",
-      data:{
-          "comment": "[DESENV] TESTE",
-          "started": "2017-07-25T08:00:00.000-0300",
-          "timeSpentSeconds": 3600
-      }
-      }).then(function successCallback(response) {
-
-
-      }, function errorCallback(response) { });
-
-  }
-
-  $scope.issueControl = function (id) {
+  $scope.getWorklogs = function () {
 
     var params = {
       url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
       method: "POST",
       data:{
-        op  : 4,
-        id  : id,
+        op : 7,
         usuario : $scope.dadosUsuario.name
       }
     };
 
     http.getData(params).then(function(response) {
 
+      if(response.length == 0)
+        swal("Todos Worklogs já foram enviados.", "", "error");
+      else 
+        $scope.publishJira(response);
+
+    });
+
+  }
+
+  $scope.publishJira = function (worklogs) {
+
+    $scope.loading = true;
+
+    angular.forEach(worklogs, function(value) {
+
+      var params = {
+        url: "http://jira.kbase.inf.br/rest/api/2/issue/OKI-320/worklog",
+        method: "POST",
+        data:{
+            "comment": value.info,
+            "started": value.dia + "T" + value.inicio + ".000-0300",
+            "timeSpentSeconds": value.segundos
+        }
+      };
+
+      http.getData(params).then(function(response) {
+
+        swal("Worklogs enviados com sucesso.", "", "success");
+
+        $scope.loading = false;
+
+      });
+
+    });
+
+  }
+
+  $scope.issueControl = function (atividade) {
+
+    var params = {
+      url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
+      method: "POST",
+      data:{
+        op  : 4,
+        id  : $scope.idChamado,
+        usuario : $scope.dadosUsuario.name,
+        atividade : atividade
+      }
+    };
+
+    http.getData(params).then(function(response) {
+
+      delete $scope.iniciar;
       $scope.init('', '');
 
     });
@@ -211,7 +245,7 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
   $scope.editIssue = function (id) {
 
     $scope.modalEditar = true;
-    $scope.op = 8;
+    $scope.op = 6;
     delete $scope.controle;
 
     angular.forEach($scope.chamados, function(todo) {
@@ -222,7 +256,6 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
           descricao : todo.descricao,
           info : todo.info,
           id : todo.id,
-          atividade : todo.atividade,
           horasgastas : todo.horasgastas,
           datai : todo.datai
         };
@@ -233,7 +266,7 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
 
   $scope.editWorklog = function (id) {
 
-    $scope.op = 6;
+    $scope.op = 5;
 
     angular.forEach($scope.infodia, function(todo) {
       if(todo.id == id) {
@@ -256,6 +289,8 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
     };
 
     http.getData(params).then(function(response) {
+
+      console.log(response)
 
       $scope.init($scope.dataAtual, '');
 
@@ -296,11 +331,24 @@ app.controller('homeController', ['$scope', '$http', '$moment', '$location', '$w
 
   }
 
+  $scope.auxChamado = function (chamado, op) {
+
+    $scope.idChamado = chamado;
+
+    if(op)
+      $scope.issueControl();
+
+  }
+
   $scope.newWindow = function (url) {
 
     const remote = require('electron').remote;
     const BrowserWindow = remote.BrowserWindow;
-    var win = new BrowserWindow({ width: 1200, height: 600 });
+    var win = new BrowserWindow({ 
+      frame: true, width: 1000, minWidth: 1000, height: 600, minHeight: 600,
+      useContentSize : true, resizable: false, autoHideMenuBar: true,
+      fullscreenable : false
+    });
     win.maximize();
     win.loadURL(url);
 

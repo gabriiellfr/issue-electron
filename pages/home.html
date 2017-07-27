@@ -1,4 +1,4 @@
-<section class="content-header" style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px" ng-init="getUserData()">
+<section class="content-header" style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px" ng-init="getUser()">
 
 <div id="title-bar">
 
@@ -14,12 +14,13 @@
                 <div class="col-md-4 col-sm-4 col-xs-4" style="border-radius: 10px; text-align: center; padding: 1px">
                     <form ng-keyup="$event.keyCode == 13 ? getIssuesJira(search) : null">
                         <input type="text" ng-model="search" placeholder="ABC-666" maxlength="9" style="background: transparent; color: white; text-align: center; width: 80px">
-                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <i class="fa fa-search" ng-click="getIssuesJira(search)" aria-hidden="true" style="cursor: pointer;"></i>
                     </form>
                 </div>
 
                 <div class="col-md-4 col-sm-4 col-xs-4" style="border-radius: 10px; text-align: right; padding: 1px">
-                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Carregar Issues do JIRA" ng-click="getIssuesJira()"> <i class="fa fa-refresh" aria-hidden="true"></i> </button>
+                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Carregar Issues" ng-click="getIssuesJira()"> <i class="fa fa-refresh" aria-hidden="true"></i> </button>
+                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Publicar WorkLogs" ng-click="getWorklogs()"> <i class="fa fa-upload" aria-hidden="true"></i> </button>
                     <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Expandir Issue" ng-click="issueDetails()"> <i class="fa fa-info-circle" aria-hidden="true"></i> </button>
                     <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="GitHub" ng-click="newWindow('https://github.com/gabriiellfr/issue-electron/issues')"> <i class="fa fa-github" aria-hidden="true"></i> </button>
                     <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Configura&ccedil;&otilde;es" ng-click="goTo('config')" class="hidden"> <i class="fa fa-cogs" aria-hidden="true"></i> </button>
@@ -44,12 +45,15 @@
 
                 <table class="table table-borderless" style="margin: 0px 0px 10px 0px">
                     <tr>
-                        <td>
-                            <i style="cursor: pointer;" ng-click="issueControl(chamado.id)" ng-class="{'0':'fa fa-play', '1':'fa fa-hand-paper-o'}[chamado.rodando]" aria-hidden="true"></i>
+                        <td ng-show="chamado.rodando == 1">
+                            <i style="cursor: pointer;" ng-click="auxChamado(chamado.id, 'stop')" class="fa fa-hand-paper-o" aria-hidden="true"></i>
+                        </td>
+                        <td ng-show="chamado.rodando == 0">
+                            <i style="cursor: pointer;" ng-click="auxChamado(chamado.id)" ng-class="{'0':'fa fa-play', '1':'fa fa-hand-paper-o'}[chamado.rodando]" aria-hidden="true" data-toggle="modal" data-target="#modalAtividade"></i>
                         </td>
                         <td>
                             <h3 style="font-size: 150%; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px">
-                            {{ chamado.numero }}
+                            <label style="cursor: pointer;" ng-click="newWindow('http://jira.kbase.inf.br/browse/'+chamado.numero)">{{ chamado.numero }}</label>
                             </h3>
                         </td>
                         <td>
@@ -181,25 +185,6 @@
                 Issue
                 <input type="text" ng-model="controle.issue" class="form-control" ng-disabled="modalEditar">
             </td>
-            <td width="50%">
-                Atividade
-                <select name="combo" ng-model="controle.atividade" class="form-control">
-                    <option value="">Selecione
-                    </option><option value="RETRA">Retrabalho
-                    </option><option value="REQ">Requisito
-                    </option><option value="RV_REQ">Rv. do Requisito
-                    </option><option value="ESP">Especificacao
-                    </option><option value="RV_ESP">Rv. da Especificacao
-                    </option><option value="CT">Casos de Teste
-                    </option><option value="DESENV">Desenvolvimento
-                    </option><option value="TESTE">Teste
-                    </option><option value="REUNIAO">Reuniao
-                    </option><option value="GP">Gerenciamento do Projeto
-                    </option><option value="HOMO">Homologacao
-                    </option><option value="OPER">Operacao assistida
-                    </option>
-                </select>
-            </td>
           </tr>
 
           <tr>
@@ -266,7 +251,27 @@
                     <input type="text" ng-model="controleEM.dia" class="form-control" ng-disabled="true">
                 </td>
                 <td>
-                    <br>
+                    Atividade
+                    <select name="combo" ng-model="controleEM.atividade" class="form-control">
+                        <option value="">Selecione
+                        </option><option value="RETRA">Retrabalho
+                        </option><option value="REQ">Requisito
+                        </option><option value="RV_REQ">Rv. do Requisito
+                        </option><option value="ESP">Especificacao
+                        </option><option value="RV_ESP">Rv. da Especificacao
+                        </option><option value="CT">Casos de Teste
+                        </option><option value="DESENV">Desenvolvimento
+                        </option><option value="TESTE">Teste
+                        </option><option value="REUNIAO">Reuniao
+                        </option><option value="GP">Gerenciamento do Projeto
+                        </option><option value="HOMO">Homologacao
+                        </option><option value="OPER">Operacao assistida
+                        </option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" align="right">
                     <button type="button" ng-click="delete(controleEM)" class="btn btn-default" data-dismiss="modal">Excluir</button>
                     <button type="button" ng-click="save(controleEM)" class="btn btn-primary" data-dismiss="modal">Salvar</button>
                 </td>
@@ -277,3 +282,52 @@
   </div>
 </div>
 </div>
+
+<!-- Modal Atividade -->
+<div class="modal fade" id="modalAtividade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog modal-sm" role="document">
+  <div class="modal-content">
+
+    <div class="modal-body">
+
+        <form name="formAtividade">
+            <table class="table" style="margin: 0px 0px 0px 0px">
+                <tr>
+                    <td>
+                        <br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Informe a atividade
+                        <select name="combo" ng-model="iniciar.atividade" class="form-control" required>
+                            <option value="">Selecione
+                            </option><option value="RETRA">Retrabalho
+                            </option><option value="REQ">Requisito
+                            </option><option value="RV_REQ">Rv. do Requisito
+                            </option><option value="ESP">Especificacao
+                            </option><option value="RV_ESP">Rv. da Especificacao
+                            </option><option value="CT">Casos de Teste
+                            </option><option value="DESENV">Desenvolvimento
+                            </option><option value="TESTE">Teste
+                            </option><option value="REUNIAO">Reuniao
+                            </option><option value="GP">Gerenciamento do Projeto
+                            </option><option value="HOMO">Homologacao
+                            </option><option value="OPER">Operacao assistida
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="right">
+                        <button type="button" ng-disabled="formAtividade.$invalid" ng-click="issueControl(iniciar.atividade)" class="btn btn-primary" data-dismiss="modal" onclick="$(function () { $('.modal').modal('hide'); });">Iniciar</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+    </div>
+  </div>
+</div>
+</div>
+

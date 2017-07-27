@@ -31,24 +31,22 @@
 			
 			<div class="login-box-body" style="width: 30%">
 
-			  <form name="formLogin" ng-keyup="$event.keyCode == 13 ? login(control) : null">
+			  <form name="formLogin" ng-keyup="$event.keyCode == 13 ? login(control) : null" novalidate>
 
-				<div class="form-group has-feedback">
-				  <input type="text" id="login" class="form-control" name="control.login" focus="true" ng-model="control.login" placeholder="Login">
-				  <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-				</div>
-				<div class="form-group has-feedback">
-				  <input type="password" id="pass" class="form-control" name="control.password" ng-model="control.password" placeholder="Password">
-				  <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-				</div>
-				<div class="row">
-				  <div class="col-xs-4">
-						<button type="button" id="driver" class="btn btn-primary btn-block btn-flat" ng-click="login(control)">Entrar</button>
-				  </div>
-				  <div class="col-xs-8">
-						<button type="button" data-toggle="modal" data-target="#modalEditarMarcacao" class="btn btn-primary btn-block btn-flat">Criar Conta</button>
-				  </div>
-				</div>
+					<div class="form-group has-feedback">
+						<input type="text" id="login" class="form-control" name="control.login" focus="true" ng-model="control.login" placeholder="Login" required>
+						<span class="glyphicon glyphicon-user form-control-feedback"></span>
+					</div>
+
+					<div class="form-group has-feedback">
+						<input type="password" id="pass" class="form-control" name="control.password" ng-model="control.password" placeholder="Password" required>
+						<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<button type="button" ng-disabled="formLogin.$invalid" id="driver" class="btn btn-primary btn-block btn-flat" ng-click="login(control)">Entrar</button>
+						</div>
+					</div>
 
 			  </form> 
 

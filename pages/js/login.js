@@ -2,12 +2,29 @@
 
 app.controller('indexController', ['$scope', '$http', '$moment', '$location', function($scope, $http, $moment, $location) {
   
-  $scope.versao = "1.11";
+  $scope.versao = "1.12";
   $scope.loading = false;
 
   $scope.verificaUpdate = function () {
 
     $scope.loading = true;
+
+    const fs = require('fs');
+
+    fs.readFile("C://WorkLog/.ac", 'utf8', function(err, data) {
+
+      if(data && data.length > 0) {
+
+        var aux = new Buffer(data, 'base64').toString('ascii');
+        aux = aux.split(";");
+
+        $scope.control = {
+          login : aux[0],
+          password : aux[1]
+        }
+      }
+
+    });
 
     $http({
       url: "http://foxbr.ddns.net/issue-electron/includes/php/index.php",
@@ -21,7 +38,7 @@ app.controller('indexController', ['$scope', '$http', '$moment', '$location', fu
         if(response.data) {
 
           swal({
-            title: "Existe uma nova vers√£o dispon√≠vel",
+            title: "Existe uma nova vers„o disponÌvel",
             text: "Pressione Ok e aguarde o processo terminar.",
             type: "warning",
             showCancelButton: false,
@@ -29,7 +46,7 @@ app.controller('indexController', ['$scope', '$http', '$moment', '$location', fu
             confirmButtonText: "Ok",
             closeOnConfirm: false
           },
-          function(){
+          function() {
 
             require('child_process').exec('cmd /c C:/worklog/update.bat', function(){});
 
@@ -57,10 +74,17 @@ app.controller('indexController', ['$scope', '$http', '$moment', '$location', fu
       }
       }).then(function successCallback(response) {
 
+        const path = require('path');
+        const fs = require('fs');
+
+        var aux = Buffer(controle.login + ";" + controle.password).toString('base64')
+
+        fs.writeFile("C://WorkLog/.ac", aux, function(err) { }); 
+
         $location.path('/home/').search({ reload: true });
         $scope.loading = false;
 
-      }, function errorCallback(response) { $scope.mErroLogin = true; });
+      }, function errorCallback(response) { $scope.mErroLogin = true; $scope.loading = false; });
 
   }
 
