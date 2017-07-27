@@ -1,8 +1,10 @@
 'use strict';
 
-app.controller('homeController', ['$scope', '$moment', '$location', 'http', function($scope, $moment, $location, http) {
+app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope', 'http', 'utils', function($scope, $moment, $location, $rootScope, http, utils) {
 
   $scope.init = function (dataAtual, op) {
+
+    utils.verificaVersao($rootScope.versao);
 
     $scope.mDetalhes = false;
 
@@ -199,7 +201,7 @@ app.controller('homeController', ['$scope', '$moment', '$location', 'http', func
     angular.forEach(worklogs, function(value) {
 
       var params = {
-        url: "http://jira.kbase.inf.br/rest/api/2/issue/OKI-320/worklog",
+        url: "http://jira.kbase.inf.br/rest/api/2/issue/" + value.issue + "/worklog",
         method: "POST",
         data:{
             "comment": value.info,
@@ -289,8 +291,6 @@ app.controller('homeController', ['$scope', '$moment', '$location', 'http', func
     };
 
     http.getData(params).then(function(response) {
-
-      console.log(response)
 
       $scope.init($scope.dataAtual, '');
 
