@@ -1,0 +1,46 @@
+<div class="modal fade" id="modalADD" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="margin-top: 20px">
+  <div class="modal-dialog modal-bg" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <table class="table" style="margin: 0px 0px 0px 0px">
+          <tr ng-show="modalEditar">
+            <td>
+                Aberto em {{ controle.datai | date:'dd/MM/yyyy' }}
+            </td>
+            <td align="right">
+                {{ controle.horasgastas }}
+            </td>
+          </tr>
+
+          <tr>
+            <td width="50%">
+                Issue
+                <input type="text" ng-model="controle.issue" class="form-control" ng-disabled="modalEditar">
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="2">
+                Descri&ccedil;&atilde;o
+                <input type="text" ng-model="controle.descricao" class="form-control">
+            </td>
+          </tr>
+
+          <tr>
+            <td colspan="2">
+                Info
+                <input type="text" ng-model="controle.info" class="form-control">
+            </td>
+          </tr>
+
+          <tr>
+            <td align="right" colspan="2"><br>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                <button type="button" ng-click="save(controle, 2)" class="btn btn-primary" data-dismiss="modal">Salvar</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
