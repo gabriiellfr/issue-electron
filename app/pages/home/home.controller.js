@@ -1,6 +1,8 @@
 'use strict';
 
-app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope', 'http', 'utils', function($scope, $moment, $location, $rootScope, http, utils) {
+app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope', 'http', 'utils', 'jira', 'foxbr', function($scope, $moment, $location, $rootScope, http, utils, jira, foxbr) {
+
+  var params = {};
 
   $scope.init = function (dataAtual, op) {
 
@@ -52,26 +54,24 @@ app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope'
 
     $scope.loading = true;
 
-    var params = {
-        url: "http://jira.kbase.inf.br/rest/auth/1/session",
-        method: "GET",
-        data: {
-        }
-    };
+    jira.session(null, function(err, res) {
 
-    http.getData(params).then(function(response) {
+      if (err)
+        console.log(err);
 
-      params = {
-        url: response.self,
+      var params = {
+        url: res.self,
         method: "GET",
-        data: {
-        }
+        data: {}
       };
          
-      http.getData(params).then(function(responseB) {
-          
-          $scope.dadosUsuario = responseB;
-          $scope.getIssuesJira();
+      jira.getUser(params, function(err, res) {
+
+        if (err)
+          console.log(err);
+        
+        $scope.dadosUsuario = res;
+        $scope.getIssuesJira();
 
       });
 
@@ -81,32 +81,26 @@ app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope'
 
   $scope.getIssuesJira = function (search) {
 
-    var JQL;
+    var jql = "status NOT IN ('closed', 'Resolved', 'Cancelled') AND assignee='"+$scope.dadosUsuario.name+"'";
 
-    if(!search)
-      JQL = "status NOT IN ('closed', 'Resolved', 'Cancelled') AND assignee='"+$scope.dadosUsuario.name+"'";
-
-    else
-      JQL = "issue = '" + search + "'";
+    if(search)
+      jql = "issue = '" + search + "'";
 
     var params = {
-      url: "http://jira.kbase.inf.br/rest/api/2/search",
-      method: "POST",
-      data:{
-          "jql": JQL,
-          "maxResults": 100,
-          "fields": [
-              "summary",
-              "status",
-              "assignee"
-          ]
-      }
+      "jql": jql,
+      "maxResults": 100,
+      "fields": [
+          "summary",
+          "status",
+          "assignee"
+      ]
     };
+    
+    jira.search(params, function (err, issues) {
+      if (err)
+        console.log(err);
 
-    http.getData(params).then(function(response) {
-
-      if(response)
-        $scope.saveIssuesBD(response.issues);
+      $scope.saveIssuesBD(issues);
 
     });
 
@@ -114,17 +108,12 @@ app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope'
 
   $scope.saveIssuesBD = function (issues) {
 
-    var params = {
-      url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
-      method: "POST",
-      data:{
-        op : 1,
-        issues : issues,
-        usuario : $scope.dadosUsuario.name
-      }
-    };
+    params = {
+      issues : issues,
+      usuario : $scope.dadosUsuario.name
+    }
 
-    http.getData(params).then(function(response) {
+    foxbr.insertIssue(params, function(err, response) {
 
       $scope.init('', '');
 
@@ -135,15 +124,10 @@ app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope'
   $scope.getIssuesBD = function () {
 
     var params = {
-      url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
-      method: "POST",
-      data:{
-        op : 2,
-        usuario : $scope.dadosUsuario.name
-      }
+      usuario : $scope.dadosUsuario.name
     };
 
-    http.getData(params).then(function(response) {
+    foxbr.getIssue(params, function(err, response) {
 
       $scope.chamados = response;
 
@@ -154,16 +138,11 @@ app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope'
   $scope.getInfoDay = function (data) {
 
     var params = {
-      url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
-      method: "POST",
-      data:{
-        op : 3,
-        data : data,
-        usuario : $scope.dadosUsuario.name
-      }
+      data : data,
+      usuario : $scope.dadosUsuario.name
     };
 
-    http.getData(params).then(function(response) {
+    foxbr.getInfoDay(params, function(err, response) {
 
         $scope.infodia = response;
         $scope.loading = false;
@@ -175,18 +154,13 @@ app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope'
   $scope.getWorklogs = function () {
 
     var params = {
-      url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
-      method: "POST",
-      data:{
-        op : 7,
-        usuario : $scope.dadosUsuario.name
-      }
+      usuario : $scope.dadosUsuario.name
     };
 
-    http.getData(params).then(function(response) {
+    foxbr.getWorklogs(params, function(err, response) {
 
       if(response.length == 0)
-        swal("Todos Worklogs já foram enviados.", "", "error");
+        swal("Todos Worklogs jï¿½ foram enviados.", "", "error");
       else 
         $scope.publishJira(response);
 

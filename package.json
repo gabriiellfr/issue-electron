@@ -32,15 +32,16 @@
     "animate.css": "^3.5.1",
     "asar": "^0.13.0",
     "bootstrap-sass": "^3.2.0",
+    "electron": "^1.6.11",
+    "electron-config": "0.2.1",
+    "electron-is-dev": "^0.1.1",
     "electron-packager": "^8.7.1",
+    "electron-updater": "latest",
     "jquery": "^3.2.1",
     "moment": "^2.14.1",
     "node-mysql": "^0.4.2",
     "sweetalert": "latest",
     "ui-select": "^0.17.0",
-    "websql": "^0.4.4",
-    "electron-updater": "latest",
-    "electron-is-dev": "^0.1.1",
-    "electron-config": "0.2.1"
+    "websql": "^0.4.4"
   }
 }

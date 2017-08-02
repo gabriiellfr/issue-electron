@@ -4,17 +4,17 @@ var app = angular.module('myApp', ['ngRoute', 'angular-momentjs', 'ui.bootstrap'
     $routeProvider
 
         .when('/', {
-            templateUrl : 'pages/login.html',
+            templateUrl : 'app/pages/login/login.html',
             controller  : 'indexController'
         })
         
         .when('/home', {
-            templateUrl : 'pages/home.html',
+            templateUrl : 'app/pages/home/home.html',
             controller  : 'homeController'
         })
         
         .when('/config', {
-            templateUrl : 'pages/config.html',
+            templateUrl : 'app/pages/config/config.html',
             controller  : 'configController'
         });
 
