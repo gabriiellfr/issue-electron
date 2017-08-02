@@ -113,7 +113,7 @@ app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope'
       usuario : $scope.dadosUsuario.name
     }
 
-    foxbr.insertIssue(params, function(err, response) {
+    foxbr.insertIssue(params, function(err, res) {
 
       $scope.init('', '');
 
@@ -127,9 +127,9 @@ app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope'
       usuario : $scope.dadosUsuario.name
     };
 
-    foxbr.getIssue(params, function(err, response) {
+    foxbr.getIssue(params, function(err, res) {
 
-      $scope.chamados = response;
+      $scope.chamados = res;
 
     });
 
@@ -142,9 +142,9 @@ app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope'
       usuario : $scope.dadosUsuario.name
     };
 
-    foxbr.getInfoDay(params, function(err, response) {
+    foxbr.getInfoDay(params, function(err, res) {
 
-        $scope.infodia = response;
+        $scope.infodia = res;
         $scope.loading = false;
 
     });
@@ -157,12 +157,12 @@ app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope'
       usuario : $scope.dadosUsuario.name
     };
 
-    foxbr.getWorklogs(params, function(err, response) {
+    foxbr.getWorklogs(params, function(err, res) {
 
-      if(response.length == 0)
+      if(res.length == 0)
         swal("Todos Worklogs j� foram enviados.", "", "error");
       else 
-        $scope.publishJira(response);
+        $scope.publishJira(res);
 
     });
 
@@ -175,21 +175,20 @@ app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope'
     angular.forEach(worklogs, function(value) {
 
       var params = {
-        url: "http://jira.kbase.inf.br/rest/api/2/issue/" + value.issue + "/worklog",
-        method: "POST",
-        data:{
-            "comment": value.info,
-            "started": value.dia + "T" + value.inicio + ".000-0300",
-            "timeSpentSeconds": value.segundos
-        }
+        "comment": value.info,
+        "started": value.dia + "T" + value.inicio + ".000-0300",
+        "timeSpentSeconds": value.segundos
       };
 
-      http.getData(params).then(function(response) {
+      jira.publish(value.issue, params, function (err, res) {
+
+        if (err)
+          return console.log(err);
 
         swal("Worklogs enviados com sucesso.", "", "success");
 
-        $scope.loading = false;
-
+        $scope.loading = false;        
+        
       });
 
     });

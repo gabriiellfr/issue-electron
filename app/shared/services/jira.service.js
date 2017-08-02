@@ -20,7 +20,7 @@ function jiraService (http) {
         let params = {
             data: data
         };
-        console.log(params);
+        
         http.post('search', params, 'jira').then(
             function (res) {
                 return cb(null, res.data);
@@ -54,6 +54,24 @@ function jiraService (http) {
             }
         );
     };
+
+    this.publish = function (key, data, cb) {
+
+        let params = {
+            data: data
+        }, 
+        url = 'issue/' + key + '/worklog';
+
+        http.post(url, params, 'jira').then(
+            function (res) {
+                return cb(null, res.data);
+            },
+            function (err) {
+                return cb(err);
+            }
+        );
+    };
+
 
 };
 
