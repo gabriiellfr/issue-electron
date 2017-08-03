@@ -31,7 +31,7 @@ function jiraService (http) {
         );
     };
 
-    this.session = function (params, cb) {
+    this.currentUser = function (params, cb) {
 
         http.get('session/', params, 'auth').then(
             function (res) {
@@ -42,6 +42,19 @@ function jiraService (http) {
             }
         );
     };
+
+    this.session = function (params, cb) {
+
+        http.post('session/', params, 'auth').then(
+            function (res) {
+                return cb(null, res.data);
+            },
+            function (err) {
+                return cb(err);
+            }
+        );
+    };
+
 
     this.getUser = function (params, cb) {
 

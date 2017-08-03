@@ -1,88 +1,94 @@
 'use strict';
 
-app.controller('indexController', ['$scope', '$http', '$moment', '$location', '$rootScope', 'utils', function($scope, $http, $moment, $location, $rootScope, utils) {
-  
-  $rootScope.versao = "1.13";
-  $scope.loading = false;
+function indexController($scope, jira, $location, $rootScope, utils) {
 
-  $scope.ultimoLogin = function () {
+	const path = require('path'),
+		fs = require('fs');
 
-    const fs = require('fs');
+	let aux, fileDir = "C://WorkLog/.ac";
 
-    fs.readFile("C://WorkLog/.ac", 'utf8', function(err, data) {
+	function ultimoLogin () {
 
-      if(data && data.length > 0) {
+		let control;
 
-        var aux = new Buffer(data, 'base64').toString('ascii');
-        aux = aux.split(";");
+		fs.readFile(fileDir, 'utf8', (err, data) => {
 
-        $scope.control = {
-          login : aux[0],
-          password : aux[1]
-        }
-      }
+			if (data && data.length > 0) {
 
-    });
+				aux = new Buffer(data, 'base64').toString('ascii').split(";");
 
-  }
+				control = {
+					login: aux[0],
+					password: aux[1]
+				};
 
-  $scope.verificaUpdate = function () {
+				return control;
+			};
 
-    $scope.loading = true;
-    $scope.ultimoLogin();
-    utils.verificaVersao($rootScope.versao).then(function(response) {
+		});
 
-      $scope.loading = false;
+		return {};
 
-    });
+	};
 
-  }
+	function verificaUpdate () {
 
-  $scope.login = function (controle) {
+		$scope.loading = true;
 
-    $scope.loading = true;
-    $scope.mErroLogin = false;
+		utils.verificaVersao($rootScope.versao).then(function (response) {
 
-    $http({
-      url: "http://jira.kbase.inf.br/rest/auth/1/session",
-      method: "POST",
-      data:{
-          username: controle.login,
-          password: controle.password
-      }
-      }).then(function successCallback(response) {
+			$scope.loading = false;
 
-        const path = require('path');
-        const fs = require('fs');
+		});
 
-        var aux = Buffer(controle.login + ";" + controle.password).toString('base64')
+	};
 
-        fs.writeFile("C://WorkLog/.ac", aux, function(err) { }); 
+	function login (controle) {
 
-        $location.path('/home/').search({ reload: true });
-        $scope.loading = false;
+		$scope.loading = true;
+		$scope.mErroLogin = false;
 
-      }, function errorCallback(response) { $scope.mErroLogin = true; $scope.loading = false; });
-
-  }
-
-}]);
-
-app.directive('focus',
-	function($timeout) {
-		return {
-			scope : {
-				trigger : '@focus'
-			},
-			link : function(scope, element) {
-				scope.$watch('trigger', function(value) {
-					if (value === "true") {
-						$timeout(function() {
-							element[0].focus();
-						});
-					}
-				});
-			}
+		let params = {
+			username: controle.login,
+			password: controle.password
 		};
-	}
-); 
+
+		jira.session(params, (err, res) => {
+
+			if (err) {
+				$scope.mErroLogin = true; 
+				$scope.loading = false;
+				return console.log(err);				
+			};
+
+			aux = Buffer(controle.login + ";" + controle.password).toString('base64');
+
+			fs.exists(fileDir, (exists) => {
+				if (exists)
+					fs.writeFileSync(fileDir, aux);				
+			});
+
+			$location.path('/home/').search({ reload: true });
+			$scope.loading = false;
+
+		});
+
+	};
+
+	(function init () {
+
+		$rootScope.versao = "1.13";
+		$scope.loading = false;
+		$scope.control = ultimoLogin();
+
+		$scope.login = login;
+
+		verificaUpdate();
+
+	})();
+
+};
+
+indexController.$inject = ['$scope', 'jira', '$location', '$rootScope', 'utils'];
+
+app.controller('indexController', indexController);

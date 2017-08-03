@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope', 'http', 'utils', 'jira', 'foxbr', function($scope, $moment, $location, $rootScope, http, utils, jira, foxbr) {
+app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', 'utils', 'jira', 'foxbr', function($scope, $location, $rootScope, http, utils, jira, foxbr) {
 
   var params = {};
 
@@ -54,7 +54,7 @@ app.controller('homeController', ['$scope', '$moment', '$location', '$rootScope'
 
     $scope.loading = true;
 
-    jira.session(null, function(err, res) {
+    jira.currentUser(null, function(err, res) {
 
       if (err)
         console.log(err);
