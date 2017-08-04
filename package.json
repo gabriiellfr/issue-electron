@@ -1,8 +1,8 @@
 {
-  "name": "WorkLog",
+  "name": "worklog",
   "productName": "WorkLog",
-  "version": "1.0.0",
-  "description": "WorkLog 1.0",
+  "version": "1.14",
+  "description": "WorkLog 1.14",
   "main": "main.js",
   "scripts": {
     "start": "electron ."

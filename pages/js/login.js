@@ -2,7 +2,7 @@
 
 app.controller('indexController', ['$scope', '$http', '$moment', '$location', '$rootScope', 'utils', function($scope, $http, $moment, $location, $rootScope, utils) {
   
-  $rootScope.versao = "1.13";
+  $rootScope.versao = "1.14";
   $scope.loading = false;
 
   $scope.ultimoLogin = function () {

@@ -90,7 +90,7 @@
 
           <table class="table">
             <thead>
-              <th colspan="6" class="bg-light-blue">
+              <th colspan="7" class="bg-light-blue">
 
                 <table width="100%" class="" cellpadding="0" cellspacing="0">
                   <tr>
@@ -100,7 +100,7 @@
                     <td width="70%">
                       <div class="dropdown">
                         <button class="btn btn-primary form-control" style="padding: 5px" type="button" aria-haspopup="true" aria-expanded="true">
-                          {{ auxDataAtual }}
+                          {{ dataAtual | date: 'dd/MM/yyyy' }}
                         </button>
                       </div>
                     </td>
@@ -119,14 +119,20 @@
               <td>Inicio</td>
               <td>Fim</td>
               <td>Duracao</td>
+              <td width="5%"></td>
             </tr>
             <tr ng-repeat="info in infodia">
-              <td align="center"> <i  style="cursor: pointer;" data-toggle="modal" data-target="#modalEditarMarcacao" ng-click="editWorklog(info.id)" class="fa fa-pencil-square-o" aria-hidden="true"></i> </td>
+              <td align="center"> 
+                  <i  style="cursor: pointer;" data-toggle="modal" data-target="#modalEditarMarcacao" ng-click="editWorklog(info.id)" class="fa fa-pencil-square-o" aria-hidden="true"></i> 
+              </td>
               <td> {{ info.dia | date: 'dd/MM/yyyy' }} </td>
               <td> {{ info.issue }} </td>
               <td> {{ info.inicio }} </td>
               <td> {{ info.fim }} </td>
               <td> {{ info.duracao }} </td>
+              <td align="center"> 
+                  <i title="Enviado" ng-if="info.status == 2" class="fa fa-check" aria-hidden="true" style="color: green"></i>
+             </td>
             </tr>
             <tr ng-show="infodia.length == 0" class="alert">
               <td colspan="6" alingn="center" style="text-align: center">Nenhum registro encontrado.</td>
