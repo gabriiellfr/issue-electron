@@ -1,0 +1,47 @@
+<div class="modal fade" id="modalAtividade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-content">
+
+			<div class="modal-body">
+
+				<form name="formAtividade">
+					<table class="table" style="margin: 0px 0px 0px 0px">
+						<tr>
+							<td>
+								<br>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Informe a atividade
+								<select name="combo" ng-model="iniciar.atividade" class="form-control" required>
+									<option value="">Selecione
+									</option><option value="RETRA">Retrabalho
+									</option><option value="REQ">Requisito
+									</option><option value="RV_REQ">Rv. do Requisito
+									</option><option value="ESP">Especificacao
+									</option><option value="RV_ESP">Rv. da Especificacao
+									</option><option value="CT">Casos de Teste
+									</option><option value="DESENV">Desenvolvimento
+									</option><option value="TESTE">Teste
+									</option><option value="REUNIAO">Reuniao
+									</option><option value="GP">Gerenciamento do Projeto
+									</option><option value="HOMO">Homologacao
+									</option><option value="OPER">Operacao assistida
+									</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">
+								<button type="button" ng-disabled="formAtividade.$invalid" ng-click="issueControl(iniciar.atividade)" class="btn btn-primary"
+								 data-dismiss="modal" onclick="$(function () { $('.modal').modal('hide'); });">Iniciar</button>
+							</td>
+						</tr>
+					</table>
+				</form>
+
+			</div>
+		</div>
+	</div>
+</div>
