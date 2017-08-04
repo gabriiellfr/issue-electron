@@ -14,36 +14,17 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
     if(dataAtual == "") {
 
-      dataAtual = new Date();
-
-      $scope.diaAtual = dataAtual.getDate();
-      $scope.mesAtual = dataAtual.getMonth()+1;
-      $scope.anoAtual = dataAtual.getFullYear();
+      $scope.dataAtual = moment().format("YYYY-MM-DD")
 
     } else {
 
-      Date.prototype.addDays = function(days) {
-        var dat = new Date(dataAtual);
-        dat.setDate(dat.getDate() + days);
-        return dat;
-      }
-
-      dataAtual = new Date(dataAtual);
-
       if(op == 1) {
-        dataAtual = dataAtual.addDays(-1);
+        $scope.dataAtual = moment(dataAtual).subtract(1, 'days').format("YYYY-MM-DD");
       } else if(op == 2) {
-        dataAtual = dataAtual.addDays(1);
+       $scope.dataAtual = moment(dataAtual).add(1, 'days').format("YYYY-MM-DD");
       }
-
-      $scope.diaAtual = dataAtual.getDate();
-      $scope.mesAtual = dataAtual.getMonth()+1;
-      $scope.anoAtual = dataAtual.getFullYear();
 
     }
-
-    $scope.dataAtual = $scope.anoAtual + "-" + $scope.mesAtual + "-" + $scope.diaAtual;
-    $scope.auxDataAtual = $scope.diaAtual + "/" + $scope.mesAtual + "/" + $scope.anoAtual;
 
     $scope.getIssuesBD();
     $scope.getInfoDay($scope.dataAtual);
@@ -56,9 +37,6 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
     jira.currentUser(null, function(err, res) {
 
-      if (err)
-        console.log(err);
-
       var params = {
         url: res.self,
         method: "GET",
@@ -66,9 +44,6 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
       };
          
       jira.getUser(params, function(err, res) {
-
-        if (err)
-          console.log(err);
         
         $scope.dadosUsuario = res;
         $scope.getIssuesJira();
@@ -162,38 +137,42 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
     foxbr.getWorklogs(params, function(err, res) {
 
       if(res.length == 0)
-        swal("Todos Worklogs jï¿½ foram enviados.", "", "error");
+        swal("Todos Worklogs já foram enviados.", "", "error");
       else 
-        $scope.publishJira(res);
+        $scope.publishJira(res.data);
 
     });
 
   }
 
+
   $scope.publishJira = function (worklogs) {
 
-    $scope.loading = true;
+    $scope.loading = true; var cont = 0;
 
     angular.forEach(worklogs, function(value) {
 
       var params = {
-        "comment": value.info,
-        "started": value.dia + "T" + value.inicio + ".000-0300",
-        "timeSpentSeconds": value.segundos
+        url: "http://jira.kbase.inf.br/rest/api/2/issue/" + value.issue + "/worklog",
+        method: "POST",
+        data:{
+            "comment": value.info,
+            "started": value.dia + "T" + value.inicio + ".000-0300",
+            "timeSpentSeconds": value.segundos
+        }
       };
 
-      jira.publish(value.issue, params, function (err, res) {
+      http.getData(params);
 
-        if (err)
-          return console.log(err);
+      cont++;
 
+      if(cont == worklogs.length) {
         swal("Worklogs enviados com sucesso.", "", "success");
-
-        $scope.loading = false;        
-        
-      });
+      }
 
     });
+
+    $scope.init('', '');
 
   }
 
@@ -253,6 +232,67 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
   }
 
+  $scope.getWorklogsJira = function () {
+
+    var aux = []; var i; var valid;
+    angular.forEach($scope.infodia, function(todo) {
+      valid = true;
+      for(i = 0; i < aux.length; i++) {        
+        if(aux[i] == todo.issue) {
+          valid = false;
+        }
+      }
+      if(valid == true) {
+        aux.push(todo.issue);
+      }
+    });
+
+    var auxSplit;
+
+    if(aux.length > 0) {
+
+      for(i = 0; i < aux.length; i++) {
+
+        var params = {
+          url: "http://jira.kbase.inf.br/rest/api/2/issue/"+ aux[i] +"/worklog",
+          method: "GET"
+        };
+
+        http.getData(params).then(function(response) {
+
+          angular.forEach(response.worklogs, function(todo) {
+
+            if(todo.started.substring(0, 10) == $scope.dataAtual) {
+
+              auxSplit = todo.self.split("/");
+              $scope.deleteWorklogJira(auxSplit[7], auxSplit[9]);           
+
+            }
+
+          });
+
+        });
+
+      }
+
+    }
+
+  }
+
+  $scope.deleteWorklogJira = function ($issue, $worklog) {
+
+    var params = {
+      url: "http://jira.kbase.inf.br/rest/api/2/issue/"+ $issue +"/worklog/" + $worklog,
+      method: "DELETE",
+      headers: {
+        'Content-type': 'application/json;charset=utf-8'
+      }
+    };
+
+    http.getData(params);
+
+  }
+
   $scope.save = function (controle) {
 
     var params = {
@@ -266,6 +306,9 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
     };
 
     http.getData(params).then(function(response) {
+
+      if($scope.op == 5)
+        $scope.getWorklogsJira();
 
       $scope.init($scope.dataAtual, '');
 
