@@ -77,7 +77,7 @@ function indexController($scope, jira, $location, $rootScope, utils) {
 
 	(function init () {
 
-		$rootScope.versao = "1.13";
+		$rootScope.versao = "1.14";
 		$scope.loading = false;
 		$scope.control = ultimoLogin();
 

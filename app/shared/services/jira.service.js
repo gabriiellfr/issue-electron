@@ -25,8 +25,8 @@ function jiraService (http) {
             function (res) {
                 return cb(null, res.data);
             },
-            function (err) {
-                return cb(err);
+            function (err, res) {
+                return cb(err, res);
             }
         );
     };

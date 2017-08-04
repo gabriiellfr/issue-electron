@@ -87,20 +87,22 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
       jql = "issue = '" + search + "'";
 
     var params = {
-      "jql": jql,
-      "maxResults": 100,
-      "fields": [
-          "summary",
-          "status",
-          "assignee"
-      ]
+      url: "http://jira.kbase.inf.br/rest/api/2/search",
+      method: "POST",
+      data:{
+          "jql": jql,
+          "maxResults": 100,
+          "fields": [
+              "summary",
+              "status",
+              "assignee"
+          ]
+      }
     };
     
-    jira.search(params, function (err, issues) {
-      if (err)
-        console.log(err);
+    http.param(params).then( function (issues) {
 
-      $scope.saveIssuesBD(issues);
+      $scope.saveIssuesBD(issues.data.issues);
 
     });
 
@@ -144,7 +146,7 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
     foxbr.getInfoDay(params, function(err, res) {
 
-        $scope.infodia = res;
+        $scope.infodia = res.data;
         $scope.loading = false;
 
     });
