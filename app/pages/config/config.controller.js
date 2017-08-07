@@ -1,55 +1,59 @@
-'use strict';
+(function (){
 
-app.controller('configController', ['$scope', '$http', '$moment', '$location', function($scope, $http, $moment, $location) {
+  'use strict';
 
-    $scope.first = function (dataAtual, op) {
+  app.controller('configController', ['$scope', '$http', '$moment', '$location', function($scope, $http, $moment, $location) {
 
-      $scope.loading = true;
+      $scope.first = function (dataAtual, op) {
 
-	    $scope.getDadosUsuario();
+        $scope.loading = true;
 
-    }
+        $scope.getDadosUsuario();
 
-    $scope.getDadosUsuario = function () {
+      }
 
-      $http({
-        url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
-        method: "POST",
-        data:{
-    			op  : 9
-  		    }
-        }).then(function successCallback(response) {
+      $scope.getDadosUsuario = function () {
 
-          $scope.dadosUsuario = response.data;
+        $http({
+          url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
+          method: "POST",
+          data:{
+            op  : 9
+            }
+          }).then(function successCallback(response) {
 
-          $scope.loading = false;
-					  
-        }, function errorCallback(response) { });
+            $scope.dadosUsuario = response.data;
 
-    }
-	
-    $scope.logout = function () {
+            $scope.loading = false;
+              
+          }, function errorCallback(response) { });
 
-      $scope.loading = true;
+      }
+    
+      $scope.logout = function () {
 
-      $http({
-        url: "http://foxbr.ddns.net/issue-electron/includes/php/index.php",
-        method: "POST",
-        data:{
-    			op  : 2
-  		    }
-        }).then(function successCallback(response) {
-			
-			    $location.path('/').search({ reload: true });
-					  
-        }, function errorCallback(response) { });
+        $scope.loading = true;
 
-    }
-	
-    $scope.goTo = function (where) {
+        $http({
+          url: "http://foxbr.ddns.net/issue-electron/includes/php/index.php",
+          method: "POST",
+          data:{
+            op  : 2
+            }
+          }).then(function successCallback(response) {
+        
+            $location.path('/').search({ reload: true });
+              
+          }, function errorCallback(response) { });
 
-      $location.path(where).search({ reload: true });
+      }
+    
+      $scope.goTo = function (where) {
 
-    }
+        $location.path(where).search({ reload: true });
 
-}]);
+      }
+
+  }]);
+
+}());

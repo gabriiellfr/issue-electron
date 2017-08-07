@@ -1,3 +1,5 @@
+(function (){
+
 'use strict';
 
 app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', 'utils', 'jira', 'foxbr', function($scope, $location, $rootScope, http, utils, jira, foxbr) {
@@ -138,7 +140,7 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
     foxbr.getWorklogs(params, function(err, res) {
 
       if(res.length == 0)
-        swal("Todos Worklogs já foram enviados.", "", "error");
+        swal("Todos Worklogs jï¿½ foram enviados.", "", "error");
       else 
         $scope.publishJira(res.data);
 
@@ -374,3 +376,5 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
   }
 
 }]);
+
+}());
