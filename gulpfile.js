@@ -36,7 +36,7 @@ gulp.task('build:bundle', ['clean:temporary'], () => {
 // Minifica JS
 gulp.task('build:min', ['build:bundle'], () => {
 
-    gulp.src(DIST_PATH + APP_PREFIX + '.js')
+    gulp.src(SRC_CODE)
         // .pipe(sourcemaps.init())
         .pipe(concat(APP_PREFIX + '.min.js'))
         .pipe(ngAnnotate())
