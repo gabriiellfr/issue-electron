@@ -1,8 +1,13 @@
-'use strict';
+(function (){
 
-app.directive('modalActivity', function () {
-    return {
-        restrict: 'E',
-        templateUrl: 'app/shared/directives/modalActivity/modalActivity.html'
-    };
-});
+    'use strict';
+
+    app.directive('modalTeste', function () {
+        return {
+            restrict: 'E',
+            replace: false,
+            templateUrl: 'app/shared/directives/modalActivity/modalActivity.html'
+        };
+    });
+
+}());

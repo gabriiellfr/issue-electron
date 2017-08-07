@@ -1,21 +1,25 @@
-'use strict';
+(function (){
 
-app.factory('http', ['$http', function($http) {
+    'use strict';
 
-    var all, odds = [];
-    var getData = function(params) {
+    app.factory('http', ['$http', function($http) {
 
-        return $http(params).then(function successCallback(response) {
+        var all, odds = [];
+        var getData = function(params) {
 
-            return response.data
-              
-        }, function errorCallback(response) { });
+            return $http(params).then(function successCallback(response) {
 
-    }
-    return {
+                return response.data
+                
+            }, function errorCallback(response) { });
 
-        getData: getData 
+        }
+        return {
 
-    };
+            getData: getData 
 
-}]);
+        };
+
+    }]);
+
+}());

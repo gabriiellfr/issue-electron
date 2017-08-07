@@ -1,3 +1,5 @@
+(function (){
+
 'use strict';
 
 app.directive('focus',
@@ -17,4 +19,6 @@ app.directive('focus',
 			}
 		};
 	}
-); 
+);
+
+}());
