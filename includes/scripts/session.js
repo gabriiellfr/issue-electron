@@ -23,14 +23,10 @@ angular.module('myApp.services', [])
           projectsModel.getById(id)
             .then(function(result){
 
-              console.log(result);
-
               //currentProject = result.rows[0];
               angular.copy(result.rows[0], currentProject);
               mysql.getConnection(currentProject)
                 .then(function(connection){
-
-                  console.log(connection);
 
                   dbConnection = connection;
                   dbConnection.connect(function(err){

@@ -8,12 +8,13 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
 
                 <div class="col-md-4 col-sm-4 col-xs-4" style="border-radius: 10px; text-align: left; padding: 1px">
-                    <label style="color: white; margin: 5px 0px 0px 10px"> {{ dadosUsuario.displayName }} </label>
+                    <img style="padding: 0px 0px 0px 0px; margin-left: 2px" src="{{ dadosUsuario.avatarUrls['24x24'] }}" alt="Gabriel Santos">
+                    <label style="color: white; margin: 5px 0px 0px 5px"> {{ dadosUsuario.name }} </label>
                 </div>
 
                 <div class="col-md-4 col-sm-4 col-xs-4" style="border-radius: 10px; text-align: center; padding: 1px">
                     <form ng-keyup="$event.keyCode == 13 ? getIssuesJira(search) : null">
-                        <input type="text" ng-model="search" placeholder="ABC-666" maxlength="9" style="background: transparent; color: white; text-align: center; width: 80px">
+                        <input type="text" ng-model="search" placeholder="ABC-666" maxlength="9" style="background: transparent; color: white; text-align: center; width: 80px; margin: 4px 0px 3px 0px">
                         <i class="fa fa-search" ng-click="getIssuesJira(search)" aria-hidden="true" style="cursor: pointer;"></i>
                     </form>
                 </div>
