@@ -20,7 +20,6 @@ app.controller('indexController', ['$scope', '$location', '$http', '$window', fu
           $scope.mErroLogin = true;
 
         } else if(response.data == 1) {
-          console.log("tudo certo");
 
           document.location.replace('./pages');
 

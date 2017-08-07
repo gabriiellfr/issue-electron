@@ -75,7 +75,6 @@ angular.module('myApp.services', [])
         if (database) {
           connectionProps.database = database;
         }
-        console.log(connectionProps);
         return mysql.createConnection(connectionProps);
       },
       getDatabases: function(connection) {
@@ -137,7 +136,6 @@ angular.module('myApp.services', [])
         });
       },
       getTableRowData: function(connection, table, columns, where) {
-        console.log(where);
         return new Promise(function(resolve, reject) {
           if (!connection) reject();
           connection.query('SELECT ?? FROM ?? WHERE ?', [columns,table, where],function(err, rows, fields) {

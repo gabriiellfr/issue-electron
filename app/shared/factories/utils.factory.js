@@ -20,13 +20,14 @@
                             if(response.data) {
 
                                 swal({
-                                    title: "Existe uma nova vers�o dispon�vel",
+                                    title: "Existe uma nova vers&atilde;o dispon&iacute;vel",
                                     text: "Pressione Ok e aguarde o processo terminar.",
                                     type: "warning",
                                     showCancelButton: false,
                                     confirmButtonColor: "#DD6B55",
                                     confirmButtonText: "Ok",
-                                    closeOnConfirm: false
+                                    closeOnConfirm: false,
+                                    html: true
                                 },
                                 function() {
 

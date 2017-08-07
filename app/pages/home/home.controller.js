@@ -47,7 +47,7 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
       };
          
       jira.getUser(params, function(err, res) {
-        
+
         $scope.dadosUsuario = res;
         $scope.getIssuesJira();
 
@@ -139,8 +139,16 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
     foxbr.getWorklogs(params, function(err, res) {
 
-      if(res.length == 0)
-        swal("Todos Worklogs j� foram enviados.", "", "error");
+      if(res.data.length == 0) {
+
+        swal({
+            title: "Todos Worklogs j&aacute; foram enviados",
+            type: "error",
+            html: true
+        });
+
+      }
+
       else 
         $scope.publishJira(res.data);
 
@@ -329,7 +337,7 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
   $scope.logout = function () {
 
     var params = {
-      url: "http://jira.kbase.inf.br/rest/api/2/issue/{issueIdOrKey}/worklog",
+      url: "http://jira.kbase.inf.br/rest/auth/1/session",
       method: "DELETE",
       headers: {
         'Content-type': 'application/json;charset=utf-8'

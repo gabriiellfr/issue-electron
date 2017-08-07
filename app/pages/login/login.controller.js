@@ -11,25 +11,20 @@
 
 		function ultimoLogin () {
 
-			let control;
-
 			fs.readFile(fileDir, 'utf8', (err, data) => {
 
 				if (data && data.length > 0) {
 
 					aux = new Buffer(data, 'base64').toString('ascii').split(";");
 
-					control = {
+					$scope.control = {
 						login: aux[0],
 						password: aux[1]
 					};
 
-					return control;
 				};
 
 			});
-
-			return {};
 
 		};
 
@@ -59,8 +54,7 @@
 
 				if (err) {
 					$scope.mErroLogin = true; 
-					$scope.loading = false;
-					return console.log(err);				
+					$scope.loading = false;		
 				};
 
 				aux = Buffer(controle.login + ";" + controle.password).toString('base64');
@@ -79,12 +73,12 @@
 
 		(function init () {
 
-			$rootScope.versao = "1.14";
+			$rootScope.versao = "1.15";
 			$scope.loading = false;
-			$scope.control = ultimoLogin();
 
 			$scope.login = login;
-
+			
+			ultimoLogin();
 			verificaUpdate();
 
 		})();
