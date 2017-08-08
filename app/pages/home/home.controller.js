@@ -30,7 +30,7 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
     $scope.getIssuesBD();
     $scope.getInfoDay($scope.dataAtual);
-
+    $scope.navbar();
 
   }
 
@@ -47,6 +47,8 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
       };
          
       jira.getUser(params, function(err, res) {
+
+        console.log(err, res)
 
         $scope.dadosUsuario = res;
         $scope.getIssuesJira();
@@ -350,16 +352,6 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
   }
 
-  $scope.issueDetails = function () {
-
-    if($scope.mDetalhes == true) {
-      $scope.mDetalhes = false;
-    } else {
-      $scope.mDetalhes = true;
-    }
-
-  }
-
   $scope.auxChamado = function (chamado, op) {
 
     $scope.idChamado = chamado;
@@ -380,6 +372,22 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
     });
     win.maximize();
     win.loadURL(url);
+
+  }
+
+  $scope.navbar = function () {
+
+    const remote = require('electron').remote;
+
+    document.getElementById("min-btn").addEventListener("click", function (e) {
+      var window = remote.getCurrentWindow();
+      window.minimize(); 
+    });
+
+    document.getElementById("close-btn").addEventListener("click", function (e) {
+      var window = remote.getCurrentWindow();
+      window.close();
+    }); 
 
   }
 

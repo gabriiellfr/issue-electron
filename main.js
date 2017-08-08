@@ -10,7 +10,7 @@ const Menu = electron.Menu;
 function createWindow () {
 
   mainWindow = new BrowserWindow({
-      frame: true, width: 1000, minWidth: 1000, height: 600, minHeight: 600,
+      frame: false, width: 1000, minWidth: 1000, height: 600, minHeight: 600,
       useContentSize : true, resizable: false, autoHideMenuBar: true,
       fullscreenable : false
   })
