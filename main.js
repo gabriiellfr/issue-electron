@@ -33,7 +33,7 @@ function createWindow () {
     mainWindow = null
   })
 
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 }
 
 app.on('ready', createWindow)

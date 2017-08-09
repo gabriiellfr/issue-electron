@@ -90,9 +90,6 @@
                     <ul class="products-list product-list-in-box">
 
                         <li class="item" ng-repeat="chamado in chamados | filter:search | limitTo: 6" ng-class="{'1':'bg-green', '0':''}[chamado.rodando]">
-                            <div class="product-img">
-
-                            </div>
 
                             <div class="product-info" style="color: black">
                                 {{ chamado.numero }}
@@ -105,6 +102,11 @@
                                     {{ chamado.descricao }}
                                 </span>
                             </div>
+                            
+                        </li>
+
+                        <li ng-if="mUpdate" class="alert alert-danger" style="text-align: center; margin: 0px 0px 0px 0px" ng-click="update()">
+                            Clique aqui para atualizar.
                         </li>
 
                     </ul>            

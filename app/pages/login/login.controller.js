@@ -93,7 +93,7 @@
 
 		(function init () {
 
-			$rootScope.versao = "1.14";
+			$rootScope.versao = "1.15";
 			$scope.loading = false;
 
 			$scope.login = login;

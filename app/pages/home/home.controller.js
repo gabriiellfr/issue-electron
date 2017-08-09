@@ -8,8 +8,6 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
   $scope.init = function (dataAtual, op) {
 
-    utils.verificaVersao($rootScope.versao);
-
     $scope.mDetalhes = false;
 
     $scope.loading = true;
@@ -28,9 +26,30 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
     }
 
-    $scope.getIssuesBD();
-    $scope.getInfoDay($scope.dataAtual);
     $scope.navbar();
+
+    utils.verificaVersao($rootScope.versao).then(function (response) {
+
+      if(!response) {
+
+        $scope.mUpdate = false;
+        $scope.getIssuesBD();
+        $scope.getInfoDay($scope.dataAtual);
+
+      } else {
+
+        $scope.loading = false;
+        $scope.mUpdate = true;
+
+      }
+
+    });
+
+  }
+
+  $scope.update = function () {
+
+    require('child_process').exec('cmd /c C:/worklog/update.bat', function(){});
 
   }
 
@@ -47,8 +66,6 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
       };
          
       jira.getUser(params, function(err, res) {
-
-        console.log(err, res)
 
         $scope.dadosUsuario = res;
         $scope.getIssuesJira();
