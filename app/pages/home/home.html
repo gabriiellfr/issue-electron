@@ -1,175 +1,165 @@
 <section class="content-header" style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px" ng-init="getUser()">
 
-<div id="title-bar">
+    <div id="title-bar">
 
-    <div id="title-bar-btns">
+        <div id="title-bar-btns">
 
-        <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="row dragEnable">
+                <div class="col-md-12 col-sm-12 col-xs-12">
 
-                <div class="col-md-4 col-sm-4 col-xs-4" style="border-radius: 10px; text-align: left; padding: 1px">
-                    <img style="padding: 0px 0px 0px 0px; margin-left: 2px" src="{{ dadosUsuario.avatarUrls['24x24'] }}" alt="Gabriel Santos">
-                    <label style="color: white; margin: 5px 0px 0px 5px"> {{ dadosUsuario.name }} </label>
+                    <div class="col-md-4 col-sm-4 col-xs-4" style="border-radius: 10px; text-align: left; padding: 1px">
+                        <div class="dropdown" style="padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px">
+                            <button style="padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <img style="padding: 0px 0px 0px 0px; margin-left: 2px" src="{{ dadosUsuario.avatarUrls['24x24'] }}">
+                            </button>
+                            <label style="color: white; margin: 5px 0px 0px 5px"> {{ dadosUsuario.name }} </label>
+                            <ul style="cursor: pointer" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li onclick="$(function () { $('.modal').modal('hide'); });" ng-click="getIssuesJira()"> <a>Carregar Issues</a> </li>
+                                <li onclick="$(function () { $('.modal').modal('hide'); });" ng-click="getWorklogs()"> <a>Publicar WorkLogs</a> </li>
+                                <li onclick="$(function () { $('.modal').modal('hide'); });" ng-click="newWindow('https://github.com/gabriiellfr/issue-electron/issues')"> <a>GitHub</a> </li>
+                                <li onclick="$(function () { $('.modal').modal('hide'); });" ng-click="goTo('config')" class="hidden"> <a>Carregar Issues</a> </li>
+                                <li onclick="$(function () { $('.modal').modal('hide'); });" role="separator" class="divider"></li>
+                                <li onclick="$(function () { $('.modal').modal('hide'); });" ng-click="logout()"> <a>Sair</a> </li>
+                            </ul>
+                        </div>                        
+                    </div>
+
+                    <div class="col-md-4 col-sm-4 col-xs-4" style="border-radius: 10px; text-align: center; padding: 1px">
+                        <form ng-keyup="$event.keyCode == 13 ? getIssuesJira(search) : null">
+                            <input type="text" ng-model="search" placeholder="ABC-666" maxlength="9" style="background: transparent; color: white; text-align: center; width: 80px; margin: 4px 0px 3px 0px">
+                            <i class="fa fa-search" ng-click="getIssuesJira(search)" aria-hidden="true" style="cursor: pointer;"></i>
+                        </form>
+                    </div>
+
+                    <div class="col-md-4 col-sm-4 col-xs-4" style="border-radius: 10px; text-align: right; padding: 1px">
+                        <img ng-show="loading" src="includes/img/loading.gif" height="25px">
+                        <button id="min-btn"><i class="icon ion-minus-round"></i></button>
+                        <button id="close-btn"><i class="icon ion-close-round" aria-hidden="true"></i></button>
+                    </div>
+
                 </div>
-
-                <div class="col-md-4 col-sm-4 col-xs-4" style="border-radius: 10px; text-align: center; padding: 1px">
-                    <form ng-keyup="$event.keyCode == 13 ? getIssuesJira(search) : null">
-                        <input type="text" ng-model="search" placeholder="ABC-666" maxlength="9" style="background: transparent; color: white; text-align: center; width: 80px; margin: 4px 0px 3px 0px">
-                        <i class="fa fa-search" ng-click="getIssuesJira(search)" aria-hidden="true" style="cursor: pointer;"></i>
-                    </form>
-                </div>
-
-                <div class="col-md-4 col-sm-4 col-xs-4" style="border-radius: 10px; text-align: right; padding: 1px">
-                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Carregar Issues" ng-click="getIssuesJira()"> <i class="fa fa-refresh" aria-hidden="true"></i> </button>
-                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Publicar WorkLogs" ng-click="getWorklogs()"> <i class="fa fa-upload" aria-hidden="true"></i> </button>
-                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Expandir Issue" ng-click="issueDetails()"> <i class="fa fa-info-circle" aria-hidden="true"></i> </button>
-                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="GitHub" ng-click="newWindow('https://github.com/gabriiellfr/issue-electron/issues')"> <i class="fa fa-github" aria-hidden="true"></i> </button>
-                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Configura&ccedil;&otilde;es" ng-click="goTo('config')" class="hidden"> <i class="fa fa-cogs" aria-hidden="true"></i> </button>
-                    <button id="" onclick="$(function () { $('.modal').modal('hide'); });" title="Sair" ng-click="logout()"> <i class="fa fa-sign-out" aria-hidden="true"></i> </button>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-</div>
-
-</section>
-
-<section class="" style="margin: 0px 0px 0px 0px; padding: 5px">
-
-    <div class="row" ng-show="chamados.length > 0">
-        <div class="col-md-6 col-sm-6 col-xs-6" ng-repeat="chamado in chamados | filter:search | limitTo: 6" style="border-radius: 10px; text-align: center; padding: 1px">
-
-            <div class="small-box" ng-class="{'1':'bg-green', '0':'bg-red', 'warning':'bg-yellow'}[chamado.rodando]" data-toggle="modal" data-target="#modalDetails" style="margin: 0px 0px 0px 0px">
-
-                <table class="table table-borderless" style="margin: 0px 0px 10px 0px">
-                    <tr>
-                        <td ng-show="chamado.rodando == 1">
-                            <i style="cursor: pointer;" ng-click="auxChamado(chamado.id, 'stop')" class="fa fa-hand-paper-o" aria-hidden="true"></i>
-                        </td>
-                        <td ng-show="chamado.rodando == 0">
-                            <i style="cursor: pointer;" ng-click="auxChamado(chamado.id)" ng-class="{'0':'fa fa-play', '1':'fa fa-hand-paper-o'}[chamado.rodando]" aria-hidden="true" data-toggle="modal" data-target="#modalAtividade"></i>
-                        </td>
-                        <td>
-                            <h3 style="font-size: 150%; padding: 0px 0px 0px 0px; margin: 0px 0px 0px 0px">
-                            <label style="cursor: pointer;" ng-click="newWindow('http://jira.kbase.inf.br/browse/'+chamado.numero)">{{ chamado.numero }}</label>
-                            </h3>
-                        </td>
-                        <td>
-                            <i style="cursor: pointer;" ng-click="editIssue(chamado.id)" class="fa fa-pencil-square-o" aria-hidden="true" data-toggle="modal" data-target="#modalADD"></i>
-                        </td>
-                    </tr>
-                    <tr ng-show="mDetalhes">
-                        <td colspan="3">
-                            {{ chamado.descricao | limitTo: 40 }}<label ng-show="chamado.descricao.length > 40" style="margin: 0px 0px 0px 0px">...</label>
-                        </td>
-                    </tr>
-                </table>
-
             </div>
 
         </div>
-    </div>
 
-    <div class="row" ng-show="chamados.length == 0">
-        <div class="col-md-12 col-sm-12 col-xs-12" style="border-radius: 10px; text-align: center; padding: 1px">
-
-            <div class="alert alert-danger" style="margin: 0px 0px 10px 0px">
-
-                Nenhuma issue encontrada.
-
-            </div>
-
-        </div>
-    </div>
-
-    <div class="row" ng-hide="loading">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="box box-primary" style="margin: 0px 0px 0px 0px">
-
-          <table class="table">
-            <thead>
-              <th colspan="7" class="bg-light-blue">
-
-                <table width="100%" class="" cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td width="15%">
-                      <button class="btn btn-primary form-control" ng-click="init(dataAtual,'1')"> << </button>
-                    </td>
-                    <td width="70%">
-                      <div class="dropdown">
-                        <button class="btn btn-primary form-control" style="padding: 5px" type="button" aria-haspopup="true" aria-expanded="true">
-                          {{ dataAtual | date: 'dd/MM/yyyy' }}
-                        </button>
-                      </div>
-                    </td>
-                    <td width="15%">
-                      <button class="btn btn-primary form-control" ng-click="init(dataAtual,'2')"> >> </button>
-                    </td>
-                  </tr>
-                </table>
-
-              </th>
-            </thead>
-            <tr>
-              <td width="5%"></td>
-              <td>Dia</td>
-              <td>Issue</td>
-              <td>Inicio</td>
-              <td>Fim</td>
-              <td>Duracao</td>
-              <td width="5%"></td>
-            </tr>
-            <tr ng-repeat="info in infodia">
-              <td align="center"> 
-                  <i  style="cursor: pointer;" data-toggle="modal" data-target="#modalEditarMarcacao" ng-click="editWorklog(info.id)" class="fa fa-pencil-square-o" aria-hidden="true"></i> 
-              </td>
-              <td> {{ info.dia | date: 'dd/MM/yyyy' }} </td>
-              <td> {{ info.issue }} </td>
-              <td> {{ info.inicio }} </td>
-              <td> {{ info.fim }} </td>
-              <td> {{ info.duracao }} </td>
-              <td align="center"> 
-                  <i title="Enviado" ng-if="info.status == 2" class="fa fa-check" aria-hidden="true" style="color: green"></i>
-             </td>
-            </tr>
-            <tr ng-show="infodia.length == 0" class="alert">
-              <td colspan="6" alingn="center" style="text-align: center">Nenhum registro encontrado.</td>
-            </tr>
-          </table>
-
-            </div>
-        </div>
     </div>
 
 </section>
 
-<!-- tela de loading -->
-<section class="content" ng-show="loading">
+<section class="content">
+
     <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12 loading">
-            <table border="0" align="center" width="100%" height="100%">
-            <tr><td><br></td></tr>
-            <tr><td><br></td></tr>
-            <tr><td><br></td></tr>
-            <tr><td><br></td></tr>
-            <tr><td><br></td></tr>
-            <tr><td><br></td></tr>
-            <tr>
-                <td align="center">
-                    <img src="includes/img/loading.gif">
-                </td>
-            </tr>
-            <tr>
-                <td align="center">
-                    <b>Aguarde...</b>
-                </td>
-            </tr>
+        <div class="col-md-12">
+
+            <table class="table">
+                <thead>
+                    <th colspan="7" class="bg-light-blue">
+
+                        <table width="100%" class="" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="15%">
+                                    <button class="btn btn-primary form-control" ng-click="init(dataAtual,'1')"> << </button>
+                                </td>
+                                <td width="70%">
+                                    <div class="dropdown">
+                                        <button class="btn btn-primary form-control" style="padding: 5px" type="button" aria-haspopup="true" aria-expanded="true">
+                                            {{ dataAtual | date: 'dd/MM/yyyy' }}                                
+                                        </button>
+                                    </div>
+                                </td>
+                                <td width="15%">
+                                    <button class="btn btn-primary form-control" ng-click="init(dataAtual,'2')"> >> </button>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </th>
+                </thead>
             </table>
+
         </div>
     </div>
+
+    <div class="row">
+
+        <div class="col-md-4">
+
+            <div class="box box-primary">
+                <div class="box-body">
+
+                    <ul class="products-list product-list-in-box">
+
+                        <li class="item" ng-repeat="chamado in chamados | filter:search | limitTo: 6" ng-class="{'1':'bg-green', '0':''}[chamado.rodando]">
+
+                            <div class="product-info" style="color: black">
+                                {{ chamado.numero }}
+                                <span class="label pull-right" style="font-size: 13px">
+                                    <i style="cursor: pointer; color: black" ng-show="chamado.rodando == 1" ng-click="auxChamado(chamado.id, 'stop')" class="fa fa-hand-paper-o" aria-hidden="true"></i> 
+                                    <i style="cursor: pointer; color: black" ng-show="chamado.rodando == 0" ng-click="auxChamado(chamado.id)" ng-class="{'0':'fa fa-play', '1':'fa fa-hand-paper-o'}[chamado.rodando]" aria-hidden="true" data-toggle="modal" data-target="#modalAtividade"></i> 
+                                    <i style="cursor: pointer; color: black"                                ng-click="editIssue(chamado.id)" class="fa fa-pencil-square-o" aria-hidden="true" data-toggle="modal" data-target="#modalADD"></i> 
+                                </span>
+                                <span class="product-description" style="color: black">
+                                    {{ chamado.descricao }}
+                                </span>
+                            </div>
+                            
+                        </li>
+
+                        <li ng-if="mUpdate" class="alert alert-danger" style="text-align: center; margin: 0px 0px 0px 0px" ng-click="update()">
+                            Clique aqui para atualizar.
+                        </li>
+
+                    </ul>            
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-md-8">
+
+            <div class="box box-info">
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table no-margin">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Dia</th>
+                                    <th>Issue</th>
+                                    <th>In&iacute;cio</th>
+                                    <th>Fim</th>
+                                    <th>Dura&ccedil;&atilde;o</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="info in infodia">
+                                    <td align="center"> 
+                                        <i  style="cursor: pointer;" data-toggle="modal" data-target="#modalEditarMarcacao" ng-click="editWorklog(info.id)" class="fa fa-pencil-square-o" aria-hidden="true"></i> 
+                                    </td>
+                                    <td> {{ info.dia | date: 'dd/MM/yyyy' }} </td>
+                                    <td> {{ info.issue }} </td>
+                                    <td> {{ info.inicio }} </td>
+                                    <td> {{ info.fim }} </td>
+                                    <td> {{ info.duracao }} </td>
+                                    <td align="center"> 
+                                        <i title="Enviado" ng-if="info.status == 2" class="fa fa-check" aria-hidden="true" style="color: green"></i>
+                                        <i title="Enviado" ng-if="info.status == 0" class="fa fa-check" aria-hidden="true" style="color: red"></i>
+                                    </td>
+                                </tr>
+                                <tr ng-show="infodia.length == 0" class="alert">
+                                    <td colspan="6" alingn="center" style="text-align: center">Nenhum registro encontrado.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
 </section>
 
 <modal-add></modal-add>
@@ -177,5 +167,3 @@
 <modal-teste></modal-teste>
 
 <modal-edit></modal-edit>
-
-

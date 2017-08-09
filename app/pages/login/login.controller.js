@@ -53,21 +53,41 @@
 			jira.session(params, (err, res) => {
 
 				if (err) {
+
 					$scope.mErroLogin = true; 
-					$scope.loading = false;		
-				};
+					$scope.loading = false;	
 
-				aux = Buffer(controle.login + ";" + controle.password).toString('base64');
+				} else {
 
-				fs.exists(fileDir, (exists) => {
-					if (exists)
-						fs.writeFileSync(fileDir, aux);				
-				});
+					aux = Buffer(controle.login + ";" + controle.password).toString('base64');
 
-				$location.path('/home/').search({ reload: true });
-				$scope.loading = false;
+					fs.exists(fileDir, (exists) => {
+						if (exists)
+							fs.writeFileSync(fileDir, aux);				
+					});
+
+					$location.path('/home/').search({ reload: true });
+					$scope.loading = false;
+
+				}
 
 			});
+
+		};
+
+		function navbar () {
+
+			const remote = require('electron').remote;
+
+			document.getElementById("min-btn").addEventListener("click", function (e) {
+				var window = remote.getCurrentWindow();
+				window.minimize(); 
+			});
+
+			document.getElementById("close-btn").addEventListener("click", function (e) {
+				var window = remote.getCurrentWindow();
+				window.close();
+			}); 
 
 		};
 
@@ -80,6 +100,7 @@
 			
 			ultimoLogin();
 			verificaUpdate();
+			navbar();
 
 		})();
 

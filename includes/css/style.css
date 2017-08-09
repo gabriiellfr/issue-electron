@@ -1,3 +1,22 @@
+.centerDropdown {
+  left: 50%;
+  right: auto;
+  text-align: center;
+  transform: translate(-50%, 0);
+}
+
+.dragEnable {
+  -webkit-app-region: drag;
+}
+
+.dragEnable label, .dragEnable input, .dragEnable i, .dragEnable button, .dragEnable a, .dragEnable button {
+  -webkit-app-region: no-drag;
+}
+
+.product-info {
+  margin-left: 5px !important;
+}
+
 #title-bar {
 	-webkit-app-region: drag;
 	height: 32px;	

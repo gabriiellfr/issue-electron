@@ -8,8 +8,6 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
   $scope.init = function (dataAtual, op) {
 
-    utils.verificaVersao($rootScope.versao);
-
     $scope.mDetalhes = false;
 
     $scope.loading = true;
@@ -28,9 +26,30 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
     }
 
-    $scope.getIssuesBD();
-    $scope.getInfoDay($scope.dataAtual);
+    $scope.navbar();
 
+    utils.verificaVersao($rootScope.versao).then(function (response) {
+
+      if(!response) {
+
+        $scope.mUpdate = false;
+        $scope.getIssuesBD();
+        $scope.getInfoDay($scope.dataAtual);
+
+      } else {
+
+        $scope.loading = false;
+        $scope.mUpdate = true;
+
+      }
+
+    });
+
+  }
+
+  $scope.update = function () {
+
+    require('child_process').exec('cmd /c C:/worklog/update.bat', function(){});
 
   }
 
@@ -350,16 +369,6 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
   }
 
-  $scope.issueDetails = function () {
-
-    if($scope.mDetalhes == true) {
-      $scope.mDetalhes = false;
-    } else {
-      $scope.mDetalhes = true;
-    }
-
-  }
-
   $scope.auxChamado = function (chamado, op) {
 
     $scope.idChamado = chamado;
@@ -380,6 +389,22 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
     });
     win.maximize();
     win.loadURL(url);
+
+  }
+
+  $scope.navbar = function () {
+
+    const remote = require('electron').remote;
+
+    document.getElementById("min-btn").addEventListener("click", function (e) {
+      var window = remote.getCurrentWindow();
+      window.minimize(); 
+    });
+
+    document.getElementById("close-btn").addEventListener("click", function (e) {
+      var window = remote.getCurrentWindow();
+      window.close();
+    }); 
 
   }
 
