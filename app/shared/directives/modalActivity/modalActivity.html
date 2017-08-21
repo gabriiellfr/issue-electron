@@ -7,12 +7,20 @@
 				<form name="formAtividade">
 					<table class="table" style="margin: 0px 0px 0px 0px">
 						<tr>
-							<td>
+							<td colspan="2">
 								<br>
 							</td>
 						</tr>
 						<tr>
-							<td>
+							<td align="left">
+								<input type="checkbox" ng-model="iniciar.horaiV"> Hora inicial
+							</td>
+							<td align="right">
+								<input type="text" ng-disabled="iniciar.horaiV != true" name="" ng-model="iniciar.horai" value="{{horaAtual}}" class="form-control" style="max-width: 60px">
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
 								Informe a atividade
 								<select name="combo" ng-model="iniciar.atividade" class="form-control" required>
 									<option value="">Selecione
@@ -33,8 +41,8 @@
 							</td>
 						</tr>
 						<tr>
-							<td align="right">
-								<button type="button" ng-disabled="formAtividade.$invalid" ng-click="issueControl(iniciar.atividade)" class="btn btn-primary"
+							<td align="right" colspan="2">
+								<button type="button" ng-disabled="formAtividade.$invalid" ng-click="issueControl(iniciar)" class="btn btn-primary"
 								 data-dismiss="modal" onclick="$(function () { $('.modal').modal('hide'); });">Iniciar</button>
 							</td>
 						</tr>

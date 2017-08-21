@@ -49,9 +49,7 @@
     "electron-updater": "latest",
     "jquery": "^3.2.1",
     "moment": "^2.14.1",
-    "node-mysql": "^0.4.2",
     "sweetalert": "latest",
-    "ui-select": "^0.17.0",
-    "websql": "^0.4.4"
+    "ui-select": "^0.17.0"
   }
 }

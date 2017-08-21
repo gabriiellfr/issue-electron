@@ -87,22 +87,32 @@
             <div class="box box-primary">
                 <div class="box-body">
 
-                    <ul class="products-list product-list-in-box">
+                    <ul class="products-list product-list-in-box" style="margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px">
 
-                        <li class="item" ng-repeat="chamado in chamados | filter:search | limitTo: 6" ng-class="{'1':'bg-green', '0':''}[chamado.rodando]">
+                        <li class="item" ng-repeat="chamado in chamados | filter:search | limitTo: 6" style="margin: 0px 0px 0px 0px" ng-class="{'1':'alert-success', '0':''}[chamado.rodando]" >
 
-                            <div class="product-info" style="color: black">
-                                {{ chamado.numero }}
-                                <span class="label pull-right" style="font-size: 13px">
-                                    <i style="cursor: pointer; color: black" ng-show="chamado.rodando == 1" ng-click="auxChamado(chamado.id, 'stop')" class="fa fa-hand-paper-o" aria-hidden="true"></i> 
-                                    <i style="cursor: pointer; color: black" ng-show="chamado.rodando == 0" ng-click="auxChamado(chamado.id)" ng-class="{'0':'fa fa-play', '1':'fa fa-hand-paper-o'}[chamado.rodando]" aria-hidden="true" data-toggle="modal" data-target="#modalAtividade"></i> 
-                                    <i style="cursor: pointer; color: black"                                ng-click="editIssue(chamado.id)" class="fa fa-pencil-square-o" aria-hidden="true" data-toggle="modal" data-target="#modalADD"></i> 
-                                </span>
-                                <span class="product-description" style="color: black">
-                                    {{ chamado.descricao }}
-                                </span>
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <div class="row" style="margin: 0px 0px 0px 0px; border-radius: 5px; padding: 0px">
+                                        <div class="col-md-8 col-sm-8 col-xs-8">
+                                            <b>{{ chamado.numero }}</b>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-xs-4" style="margin: 0px 0px 0px 0px; padding: 5px; text-align: right" ng-style="{'1':{'color': 'white'}, '0':{'color': 'black'}}[chamado.rodando]">
+                                            <i style="cursor: pointer" ng-show="chamado.rodando == 1" ng-click="auxChamado(chamado.id, 'stop')" class="fa fa-hand-paper-o" aria-hidden="true"></i>
+                                            <i style="cursor: pointer" ng-show="chamado.rodando == 0" ng-click="auxChamado(chamado.id)" ng-class="{'0':'fa fa-play', '1':'fa fa-hand-paper-o'}[chamado.rodando]" aria-hidden="true" data-toggle="modal" data-target="#modalAtividade"></i>
+                                            <i style="cursor: pointer; margin-right: 10px"            ng-click="editIssue(chamado.id)" class="fa fa-pencil-square-o" aria-hidden="true" data-toggle="modal" data-target="#modalADD"></i>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <span class="product-description" ng-style="{'1':{'color': 'white'}, '0':{'color': 'black'}}[chamado.rodando]">
+                                                {{ chamado.descricao }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
-                            
+                      
                         </li>
 
                         <li ng-if="mUpdate" class="alert alert-danger" style="text-align: center; margin: 0px 0px 0px 0px" ng-click="update()">
@@ -133,7 +143,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="info in infodia">
+                                <tr ng-repeat="info in infodia | limitTo: 11">
                                     <td align="center"> 
                                         <i  style="cursor: pointer;" data-toggle="modal" data-target="#modalEditarMarcacao" ng-click="editWorklog(info.id)" class="fa fa-pencil-square-o" aria-hidden="true"></i> 
                                     </td>
@@ -144,7 +154,7 @@
                                     <td> {{ info.duracao }} </td>
                                     <td align="center"> 
                                         <i title="Enviado" ng-if="info.status == 2" class="fa fa-check" aria-hidden="true" style="color: green"></i>
-                                        <i title="Enviado" ng-if="info.status == 0" class="fa fa-check" aria-hidden="true" style="color: red"></i>
+                                        <i title="N&atilde;o enviado" ng-if="info.status == 0" class="fa fa-ban"   aria-hidden="true" style="color: red"></i>
                                     </td>
                                 </tr>
                                 <tr ng-show="infodia.length == 0" class="alert">
