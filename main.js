@@ -33,6 +33,7 @@ function createWindow () {
     mainWindow = null
   })
 
+  //mainWindow.maximize();
   //mainWindow.webContents.openDevTools();
 }
 

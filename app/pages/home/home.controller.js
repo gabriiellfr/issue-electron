@@ -14,7 +14,7 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
     if(dataAtual == "") {
 
-      $scope.dataAtual = moment().format("YYYY-MM-DD")
+      $scope.dataAtual = moment().format("YYYY-MM-DD");
 
     } else {
 
@@ -27,6 +27,7 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
     }
 
     $scope.navbar();
+    $scope.session();
 
     utils.verificaVersao($rootScope.versao).then(function (response) {
 
@@ -50,6 +51,51 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
   $scope.update = function () {
 
     require('child_process').exec('cmd /c C:/worklog/update.bat', function(){});
+
+  }
+
+  $scope.session = function () {
+
+    jira.currentUser(null, function(err, res) {
+
+      try { 
+        
+        if(!res.self || res.self == "") throw "fail";
+
+        else {
+
+          var params = {
+            url: res.self,
+            method: "GET",
+            data: {}
+          };
+            
+          jira.getUser(params, function(err, res) {
+
+            if(!res || res == "") throw "fail";
+
+          });
+
+        }
+          
+      } catch(err) {
+
+        swal({
+          title: "Sua sess&atilde;o expirou!",
+          type: "warning",
+          showCancelButton: false,
+          closeOnConfirm: true,
+          html: true
+        },
+        function() {
+
+          $scope.logout();
+
+        });
+          
+      }
+
+    });
 
   }
 
@@ -143,6 +189,16 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
     foxbr.getInfoDay(params, function(err, res) {
 
+        if(res.data[res.data.length - 1] && res.data[res.data.length - 1].fim != "-") {
+          var horai = res.data[res.data.length - 1].fim;
+        } else {
+          var horai = moment().format("H:mm");
+        }
+
+        $scope.iniciar = {
+          horai : horai
+        };
+
         $scope.infodia = res.data;
         $scope.loading = false;
 
@@ -206,7 +262,7 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
 
   }
 
-  $scope.issueControl = function (atividade) {
+  $scope.issueControl = function (dados) {
 
     var params = {
       url: "http://foxbr.ddns.net/issue-electron/pages/action/home.php",
@@ -215,7 +271,9 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
         op  : 4,
         id  : $scope.idChamado,
         usuario : $scope.dadosUsuario.name,
-        atividade : atividade
+        atividade : dados.atividade,
+        horai : dados.horai,
+        horaiV : dados.horaiV
       }
     };
 
@@ -374,7 +432,7 @@ app.controller('homeController', ['$scope', '$location', '$rootScope', 'http', '
     $scope.idChamado = chamado;
 
     if(op)
-      $scope.issueControl();
+      $scope.issueControl(op);
 
   }
 
